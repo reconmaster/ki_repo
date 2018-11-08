@@ -50,6 +50,25 @@ bunch of good tutorials on [[https://www.atlassian.com/git/tutorials][bitbucket]
  as long as you know what you are doing. If you are unsure, please ask
  @reconmaster about what you want to do before pushing it to the
  server.
+** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
+You just have to use org. No other way around it.
+
+This page. Every page.
+
+Read ([[https://orgmode.org/][RTFM]]) through the links and examples that are sourced throughout
+that entry. The site hosting the blog is done entirely in org-mode.
+
+Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
+** [[https://www.gnu.org/software/emacs/][emacs]]
+I'll share with you what I can. Devel into the [[file:docs/README.org][docs]].
+
+#+begin_quote
+Emacs outshines all other editing software in approximately the same
+way that the noonday sun does the stars. It is not just bigger and
+brighter; it simply makes everything else vanish.
+
+Neal Stephenson, "In the Beginning was the Command Line"
+#+end_quote
 
 * Code Compliance
 In the interest of readability and good [[https://en.wikipedia.org/wiki/Standard_operating_procedure][SOP]], the code is in the
