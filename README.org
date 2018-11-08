@@ -1,0 +1,27 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:nil
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: repo
+#+AUTHOR: Andrew M Davis, PhD
+#+EMAIL: amdavis@posteo.net
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 26.1 (Org mode 9.1.13)
+#+FILETAGS: 気, ki, repo, node
+Objective: optimal node interface
+
+#+BEGIN_QUOTE
+the stupid content tracker
+
+Torvalds 先生
+#+END_QUOTE
+* Introduction
+With a selection of sophisticated tools using sound [[https://en.wikipedia.org/wiki/Unix_philosophy][Unix philosophy]],
+it is possible to get some work done.
+* Tools
+** [[https://git-scm.com/][git]]
+A very good version control system. This must be mastered to interface
+with the repository.

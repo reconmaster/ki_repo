@@ -1,0 +1,19 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:nil
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: documentation
+#+AUTHOR: Andrew M Davis, PhD
+#+EMAIL: amdavis@posteo.net
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 26.1 (Org mode 9.1.13)
+#+FILETAGS: 気, ki, doc
+Objective: [[https://en.wikipedia.org/wiki/Documentation][documentation]]
+* Introduction
+Documentation is critical to ensure our research methodology is
+completely transparent and understandable to those that consume it.
+Without a clear explanation of our procedures, the [[../results/README.org][results]] themselves
+are meaningless.

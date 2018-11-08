@@ -1,0 +1,19 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:nil
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: reports
+#+AUTHOR: Andrew M Davis, PhD
+#+EMAIL: amdavis@posteo.net
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 26.1 (Org mode 9.1.13)
+#+FILETAGS: 気, ki, report
+Objective: [[https://en.wikipedia.org/wiki/Report][report]]
+* Introduction
+Once we have the [[../results/README.org][results]] of our investigative iterations, we must
+compile the findings into a format that allows others to digest the
+meaning of these findings in the context of their own mind and
+training.
