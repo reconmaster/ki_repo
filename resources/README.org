@@ -5,12 +5,12 @@
 #+OPTIONS: timestamp:t title:t toc:t todo:t |:t
 #+TITLE: resources
 #+AUTHOR: Andrew M Davis, PhD
-#+EMAIL: amdavis@posteo.net
+#+EMAIL: @reconmater:matrix.org
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+CREATOR: Emacs 26.1 (Org mode 9.1.13)
-#+FILETAGS: 気, ki, res
+#+FILETAGS: 気, ki, comp, repo, res
 Objective: [[https://en.wikipedia.org/wiki/Resource][resources]]
 * Introduction
 Nothing happens in a vacuum. All external intelligence sources used in

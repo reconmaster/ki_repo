@@ -5,12 +5,12 @@
 #+OPTIONS: timestamp:t title:t toc:t todo:t |:t
 #+TITLE: documentation
 #+AUTHOR: Andrew M Davis, PhD
-#+EMAIL: amdavis@posteo.net
+#+EMAIL: @reconmater:matrix.org
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+CREATOR: Emacs 26.1 (Org mode 9.1.13)
-#+FILETAGS: 気, ki, doc
+#+FILETAGS: 気, ki, comp, repo, doc
 Objective: [[https://en.wikipedia.org/wiki/Documentation][documentation]]
 * Introduction
 Documentation is critical to ensure our research methodology is
