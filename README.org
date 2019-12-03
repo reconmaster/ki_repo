@@ -10,7 +10,7 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+CREATOR: Emacs 26.1 (Org mode 9.1.13)
-#+FILETAGS: 気, ki, repo, node
+#+FILETAGS: 気, ki, comp, repo, node
 Objective: optimal node interface
 
 #+BEGIN_QUOTE
@@ -45,11 +45,9 @@ bunch of good tutorials on [[https://www.atlassian.com/git/tutorials][bitbucket]
 
  Finally *NEVER* modify the git tree history once it has been pushed
  to the server repository. This will mess with everyone's local
- repositories and we'll hunt you down. Modify commit history on your
- local branch between the server version and when you commit is fine
- as long as you know what you are doing. If you are unsure, please ask
- @reconmaster about what you want to do before pushing it to the
- server.
+ repositories. Modify commit history on your local branch between the
+ server version and when you commit is fine as long as you know what
+ you are doing. If you are unsure, please ask for help.
 ** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
 You just have to use org. No other way around it.
 
@@ -84,8 +82,7 @@ here are two examples.
 To improve the interactive interface in IPython, every python method
 should have a docstring. If nothing else, a short description should
 be added. For more elaborate methods and classes, the docstring should
-include flags in the [[http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks][doxygen format for python]]. Some of the objects in
-the tomo3D.py have examples of this. This makes the doxygen generated
-documentation more useful to us as well. Please make sure new methods
-are correctly documented and feel free to add to any methods/classes
-that are missing their documentation.
+include flags in the [[http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks][doxygen format for python]]. This makes the doxygen
+generated documentation more useful to us as well. Please make sure
+new methods are correctly documented and feel free to add to any
+methods/classes that are missing their documentation.
