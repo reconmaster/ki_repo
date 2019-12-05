@@ -17,15 +17,26 @@ Documentation is critical to ensure our research methodology is
 completely transparent and understandable to those that consume it.
 Without a clear explanation of our procedures, the [[../results/README.org][results]] themselves
 are meaningless.
-* Tools
-** [[https://git-scm.com/][git]]
-A very good version control system. This must be mastered to interface
-with the repository.
 
-Keeping all of this under version control makes everyone's life so
-much easier. The steps to using git with some good instructional
-videos can be found on the [[http://git-scm.com/doc][official documentation]], and there are a
-bunch of good tutorials on [[https://www.atlassian.com/git/tutorials][bitbucket]].
+The quality of the documentation is only as good as the quality of the
+tools used to produce it. To reduce potential sources of bias between
+the user and the text, the chain of information flow from the filetype
+to the user passes through free and open-source software.
+* Tools
+The following tools were selected to introduce a component of temporal
+control into the code development process.
+** [[https://git-scm.com/][git]]
+A very good [[https://en.wikipedia.org/wiki/Version_control][version control system]].
+
+One of the primary reasons to use [[https://plaintextproject.online/][plain text]] in this code is to allow
+the ability to track [[https://en.wikipedia.org/wiki/Differential_(mathematics)][differential]] changes in the routine.
+
+Keeping everything of this under version control makes everyone's life
+so much easier by ensuring both transparency and accountability. In
+generating [[https://en.wikipedia.org/wiki/Knowledge][knowledge]], this quality is important in mitigating the [[https://en.wikipedia.org/wiki/Bias][bias]]
+of the [[https://en.wikipedia.org/wiki/Observer_(physics)][observer]].
+
+Here are some [[file:resources/git.org][resources]] for learning how to use git.
 
 *** [[https://datasift.github.io/gitflow/IntroducingGitFlow.html][gitflow]]
  For our work flow, the `master` branch will contain the stable
@@ -42,15 +53,6 @@ bunch of good tutorials on [[https://www.atlassian.com/git/tutorials][bitbucket]
  repositories. Modify commit history on your local branch between the
  server version and when you commit is fine as long as you know what
  you are doing. If you are unsure, please ask for help.
-** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
-You just have to use org. No other way around it.
-
-This page. Every page.
-
-Read ([[https://orgmode.org/][RTFM]]) through the links and examples that are sourced throughout
-that entry. The site hosting the blog is done entirely in org-mode.
-
-Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
 ** [[https://www.gnu.org/software/emacs/][emacs]]
 I'll share with you what I can. Devel into the [[file:docs/README.org][docs]].
 
@@ -62,6 +64,15 @@ brighter; it simply makes everything else vanish.
 Neal Stephenson, "In the Beginning was the Command Line"
 #+end_quote
 
+** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
+You just have to use org. No other way around it.
+
+This page. Every page.
+
+Read ([[https://orgmode.org/][RTFM]]) through the links and examples that are sourced throughout
+that entry. The site hosting the blog is done entirely in org-mode.
+
+Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
 * Code Compliance
 In the interest of readability and good [[https://en.wikipedia.org/wiki/Standard_operating_procedure][SOP]], the code is in the
 process of being updated to conform with [[https://www.python.org/dev/peps/pep-0008/][PEP8]] guidelines. This is the
