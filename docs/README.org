@@ -75,6 +75,8 @@ modification of the document.
 Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
 
 Here are some resources for learning how to use [[file:/resources/org.org][org]].
+*** [[https://github.com/jkitchin/org-ref][org-ref]]
+A great package for managing references in an org document.
 * [[https://en.wikipedia.org/wiki/Language][Languages]]
 Selecting a coding language is itself an integral part of the research
 endeavor.

@@ -26,9 +26,9 @@ When utilizing a [[https://en.wikipedia.org/wiki/Computer][computer]], I have fo
 your tools to be of great value.
 
 [[https://en.wikipedia.org/wiki/Literate_programming][Literate programming]] has a profound impact on one's interaction with
-the hardware. By improving the quality of the [[https://en.wikipedia.org/wiki/Human][human]]-[[https://en.wikipedia.org/wiki/Machine][machine]] interface,
-the subsequent quality of the machine's output is improved. This
-document is an example piece of [[https://en.wikipedia.org/wiki/Code][code]].
+the hardware cite:knuth_literate_1984. By improving the quality of the
+[[https://en.wikipedia.org/wiki/Human][human]]-[[https://en.wikipedia.org/wiki/Machine][machine]] interface, the subsequent quality of the machine's
+output is improved. This document is an example piece of [[https://en.wikipedia.org/wiki/Code][code]].
 
 By combining literate programming with sound [[https://en.wikipedia.org/wiki/Unix_philosophy][Unix philosophy]], it is
 possible to develop [[https://en.wikipedia.org/wiki/Algorithm][algorithms]] that can solve very useful problems for
@@ -43,3 +43,5 @@ This code is designed to be platform independent. That being said, an
 [[https://en.wikipedia.org/wiki/Open_source][open-source]] framework makes it far more robust.
 
 The instructions for running this code can be found in the [[file:docs/README.org][documentation]].
+
+\bibliography{resources/ref}
