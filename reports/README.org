@@ -10,7 +10,7 @@
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+CREATOR: Emacs 26.1 (Org mode 9.1.13)
-#+FILETAGS: 気, ki, report
+#+FILETAGS: 気, ki, comp, repo, report
 Objective: [[https://en.wikipedia.org/wiki/Report][report]]
 * Introduction
 Once we have the [[../results/README.org][results]] of our investigative iterations, we must

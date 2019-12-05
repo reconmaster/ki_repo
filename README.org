@@ -5,7 +5,7 @@
 #+OPTIONS: timestamp:t title:t toc:t todo:t |:t
 #+TITLE: repo
 #+AUTHOR: Andrew M Davis, PhD
-#+EMAIL: amdavis@posteo.net
+#+EMAIL: @reconmaster:matrix.org
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
@@ -19,70 +19,27 @@ the stupid content tracker
 Torvalds 先生
 #+END_QUOTE
 * Introduction
-With a selection of sophisticated tools using sound [[https://en.wikipedia.org/wiki/Unix_philosophy][Unix philosophy]],
-it is possible to get some work done.
+With the selection of proper [[https://en.wikipedia.org/wiki/Tool][tools]], it is possible to get useful [[https://en.wikipedia.org/wiki/Work_(physics)][work]]
+done.
 
-Build the interface using us as the [[https://en.wikipedia.org/wiki/Cognitive_engineering][model]].
-* Tools
-** [[https://git-scm.com/][git]]
-A very good version control system. This must be mastered to interface
-with the repository.
+When utilizing a [[https://en.wikipedia.org/wiki/Computer][computer]], I have found that the ability to modify
+your tools to be of great value.
 
-Keeping all of this under version control makes everyone's life so
-much easier. The steps to using git with some good instructional
-videos can be found on the [[http://git-scm.com/doc][official documentation]], and there are a
-bunch of good tutorials on [[https://www.atlassian.com/git/tutorials][bitbucket]].
+[[https://en.wikipedia.org/wiki/Literate_programming][Literate programming]] has a profound impact on one's interaction with
+the hardware. By improving the quality of the [[https://en.wikipedia.org/wiki/Human][human]]-[[https://en.wikipedia.org/wiki/Machine][machine]] interface,
+the subsequent quality of the machine's output is improved. This
+document is an example piece of [[https://en.wikipedia.org/wiki/Code][code]].
 
-*** [[https://datasift.github.io/gitflow/IntroducingGitFlow.html][gitflow]]
- For our work flow, the `master` branch will contain the stable
- version of the code. Code in this branch should be fully tested and
- viable to produce publication-level results.
+By combining literate programming with sound [[https://en.wikipedia.org/wiki/Unix_philosophy][Unix philosophy]], it is
+possible to develop [[https://en.wikipedia.org/wiki/Algorithm][algorithms]] that can solve very useful problems for
+[[https://en.wikipedia.org/wiki/Humanity_(virtue)][humanity]].
+* Methods
+In the course of doing [[https://en.wikipedia.org/wiki/Research][research]], [[https://en.wikipedia.org/wiki/Information][information]] must be manipulated into
+a format that is comprehensible to the human [[https://en.wikipedia.org/wiki/Mind][mind]]. The chain by which
+this information is processed must be recorded in a transparent way to
+ensure [[https://en.wikipedia.org/wiki/Reproducibility][reproducibility]].
 
- If developing a new feature or modifying an aspect of the code,
- please create a new branch `git checkout -b feature_name` off of the
- `develop` branch. Once the code has been tested and is working, merge
- it back into master. Too many sub branches becomes confusing.
+This code is designed to be platform independent. That being said, an
+[[https://en.wikipedia.org/wiki/Open_source][open-source]] framework makes it far more robust.
 
- Finally *NEVER* modify the git tree history once it has been pushed
- to the server repository. This will mess with everyone's local
- repositories. Modify commit history on your local branch between the
- server version and when you commit is fine as long as you know what
- you are doing. If you are unsure, please ask for help.
-** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
-You just have to use org. No other way around it.
-
-This page. Every page.
-
-Read ([[https://orgmode.org/][RTFM]]) through the links and examples that are sourced throughout
-that entry. The site hosting the blog is done entirely in org-mode.
-
-Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
-** [[https://www.gnu.org/software/emacs/][emacs]]
-I'll share with you what I can. Devel into the [[file:docs/README.org][docs]].
-
-#+begin_quote
-Emacs outshines all other editing software in approximately the same
-way that the noonday sun does the stars. It is not just bigger and
-brighter; it simply makes everything else vanish.
-
-Neal Stephenson, "In the Beginning was the Command Line"
-#+end_quote
-
-* Code Compliance
-In the interest of readability and good [[https://en.wikipedia.org/wiki/Standard_operating_procedure][SOP]], the code is in the
-process of being updated to conform with [[https://www.python.org/dev/peps/pep-0008/][PEP8]] guidelines. This is the
-standard on all major python projects and will serve us well.
-
-PEP 8 syntax checkers exist for most major editors. For the *nix crowd
-here are two examples.
-
-- [[http://elpy.readthedocs.org/en/latest/ide.html#syntax-checking][Emacs]]
-- [[http://www.vim.org/scripts/script.php?script_id=2914][Vim]]
-** Documentation
-To improve the interactive interface in IPython, every python method
-should have a docstring. If nothing else, a short description should
-be added. For more elaborate methods and classes, the docstring should
-include flags in the [[http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks][doxygen format for python]]. This makes the doxygen
-generated documentation more useful to us as well. Please make sure
-new methods are correctly documented and feel free to add to any
-methods/classes that are missing their documentation.
+The instructions for running this code can be found in the [[file:docs/README.org][documentation]].

@@ -17,3 +17,98 @@ Documentation is critical to ensure our research methodology is
 completely transparent and understandable to those that consume it.
 Without a clear explanation of our procedures, the [[../results/README.org][results]] themselves
 are meaningless.
+
+The quality of the documentation is only as good as the quality of the
+tools used to produce it. To reduce potential sources of bias between
+the user and the text, the chain of information flow from the filetype
+to the user passes through free and open-source software.
+* Tools
+The following tools were selected to introduce a component of temporal
+control into the code development process.
+** [[https://git-scm.com/][git]]
+A very good [[https://en.wikipedia.org/wiki/Version_control][version control system]].
+
+One of the primary reasons to use [[https://plaintextproject.online/][plain text]] in this code is to allow
+the ability to track [[https://en.wikipedia.org/wiki/Differential_(mathematics)][differential]] changes in the routine.
+
+Keeping everything of this under version control makes everyone's life
+so much easier by ensuring both transparency and accountability. In
+generating [[https://en.wikipedia.org/wiki/Knowledge][knowledge]], this quality is important in mitigating the [[https://en.wikipedia.org/wiki/Bias][bias]]
+of the [[https://en.wikipedia.org/wiki/Observer_(physics)][observer]].
+
+Here are some [[file:/resources/git.org][resources]] for learning how to use git.
+*** [[https://datasift.github.io/gitflow/IntroducingGitFlow.html][gitflow]]
+A useful development model for git.
+
+For our development process, the /master/ branch will contain the
+stable version of the code. Code in this branch should be fully tested
+and viable to produce publication-level results.
+
+If developing a new feature or modifying an aspect of the code, please
+create a new branch off of the /develop/ branch. Once the feature has
+been tested and is working, merge it back into /develop/.
+
+Finally *NEVER* modify the git tree history once it has been pushed to
+the server repository. This will mess with everyone's local
+repositories. If you are unsure of what you are doing, please ask for
+help.
+** [[https://www.gnu.org/software/emacs/][emacs]]
+#+begin_quote
+Emacs outshines all other editing software in approximately the same
+way that the noonday sun does the stars. It is not just bigger and
+brighter; it simply makes everything else vanish.
+
+Neal Stephenson, "In the Beginning was the Command Line"
+#+end_quote
+Emacs is a very sophisticated piece of software. Not only is the
+language in which it is written ([[https://en.wikipedia.org/wiki/Lisp_(programming_language)][Lisp]]) very powerful, but the [[https://www.gnu.org/philosophy][GNU]]
+framework in which it is packaged is also rather beneficial.
+
+Here are some resources for learning how to use [[file:/resources/emacs.org][emacs]].
+** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
+Org mode is a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Major-Modes.html][major mode]] of emacs.
+
+While org files themselves are plain text files, editing these files
+in emacs inserts interface functionality for both the consumption and
+modification of the document.
+
+Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
+
+Here are some resources for learning how to use [[file:/resources/org.org][org]].
+* [[https://en.wikipedia.org/wiki/Language][Languages]]
+Selecting a coding language is itself an integral part of the research
+endeavor.
+
+In the interest of readability and good [[https://en.wikipedia.org/wiki/Standard_operating_procedure][SOP]], it is advantageous to
+adhere to grammatical conventions of the selected language. That is
+unless it is necessary to break the conventions to accommodate a new
+dimension of knowledge.
+
+Here are some of the languages used in this code.
+** [[https://en.wikipedia.org/wiki/Emacs_Lisp][Emacs Lisp]]
+The dialect of lisp used for emacs.
+** [[https://en.wikipedia.org/wiki/English_language][English]]
+A West Germanic language that has reached a global scale due in part
+to the [[https://en.wikipedia.org/wiki/Internet][internet]].
+** [[https://en.wikipedia.org/wiki/Japanese_language][日本語]]
+An East Asian language that contains a lot of similar technology to
+[[https://en.wikipedia.org/wiki/Chinese_language][漢語]].
+** [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]]
+A high-level language that is very useful for scientific computing.
+
+For more legible code, the [[https://www.python.org/dev/peps/pep-0008/][PEP8]] guidelines are provided. This is the
+standard on all major python projects and will serve us well.
+
+PEP 8 syntax checkers exist for most major editors. For the *nix crowd
+here are two examples.
+
+- [[http://elpy.readthedocs.org/en/latest/ide.html#syntax-checking][Emacs]]
+- [[http://www.vim.org/scripts/script.php?script_id=2914][Vim]]
+*** Methods
+To improve the interactive interface in [[https://ipython.org/][IPython]], every python method
+should have a docstring. If nothing else, a short description should
+be added. For more elaborate methods and classes, the docstring should
+include flags in the [[http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks][doxygen format for python]]. This makes the doxygen
+generated documentation more useful to us as well. Please make sure
+new methods are correctly documented and feel free to add to any
+methods/classes that are missing their documentation.

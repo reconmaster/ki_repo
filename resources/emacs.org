@@ -1,0 +1,95 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:nil
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: emacs
+#+date: <2019-12-05 Thu>
+#+author: Andrew M Davis
+#+email: @reconmaster:matrix.org
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 26.3 (Org mode 9.2.5)
+This introductory list of resources can help you get started with
+[[https://www.gnu.org/software/emacs/emacs.html][emacs]].
+
+Emacs is self documenting. To really learn how to use it, try
+completing the builtin tutorial.
+
+#+begin_src
+C-h t
+#+end_src
+* guides
+- [[http://emacsrocks.com/][emacsrocks]]
+- [[https://www.masteringemacs.org/][masteringemacs]]
+- [[http://whattheemacsd.com/][what the .emacs.d!?]]
+* examples
+Here is a list of all the dotfiles I have used as references when
+building my own configuration
+** [[https://github.com/howardabrams/dot-files][Howard Abrams]]
+   :PROPERTIES:
+   :ID:       4abdf06e-ecfb-4f67-9a58-d00c4bede2c2
+   :END:
+
+Very nice collection of dotfiles for both emacs and other system
+dotfiles. Gives a nice talk on [[https://www.youtube.com/watch?v=dljNabciEGg][literate devops]].
+** [[http://aaronbedra.com/emacs.d/#org-mode][Aaron Bedra]]
+   :PROPERTIES:
+   :ID:       3bc4b0fa-a072-437e-9d4d-e648432032ac
+   :END:
+This guy also appears to use the skeleton abbrev mode setup like bh.
+** [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]]
+   :PROPERTIES:
+   :ID:       a56e74bb-58b6-47bc-8d67-634315b75767
+   :END:
+
+   A very good resource for literate programming with org mode.
+** [[http://p.writequit.org/org/settings.html][Lee Hinman]]
+   :PROPERTIES:
+   :ID:       a777d877-dd17-49e1-8c7b-4787f8f2b3c4
+   :END:
+- [[http://p.writequit.org/][website]]
+- [[https://github.com/dakrone][github]]
+** [[https://github.com/jkitchin/jmax][John Kitchin]]
+   :PROPERTIES:
+   :ID:       ccffd3dd-c14f-48ae-9531-ed6ed165e552
+   :END:
+John does a lot of similar work with reproducible research. I have
+used his setup for \LaTeX setup as well as his org-ref for citations.
+
+- [[file:~/src/jmax/][dotfiles]]
+** [[https://github.com/abo-abo][Oleh Krehel]]
+- Guy that makes ivy/swipper avy and other very useful tools.
+** [[http://www.jethrokuan.com/init.html][Jet Kuan]]
+- Came across his dotfiles while configuring swiper
+- Interesting looking themes
+** Daniel Mai
+   :PROPERTIES:
+   :ID:       bc079973-46a4-462b-b741-f21e7dbfa889
+   :END:
+His youtube video on combining use-package with org configuration was
+the motivation for converting my literate setup with the org-mode
+files from the starter kit to this more streamlined approach.
+
+I copied a lot of his examples when initially setting up this file
+when trying to get a better handle on the use-package functionality.
+
+- [[file:~/src/mai-emacs/config.org][dotfiles]]
+** [[https://github.com/magnars][Magnars Sveen]]
+   :PROPERTIES:
+   :ID:       2e9b0e77-d7bb-466c-8d63-932d1ee56c5c
+   :END:
+
+Does a lot of good work with emacs.
+
+- [[file:~/src/magnars][dotfiles]]
+** [[https://github.com/zamansky/dotemacs][Mike Zamansky]]
+- main [[https://github.com/zamansky/dotemacs/blob/master/myinit.org][config]] org file
+** misc
+   :PROPERTIES:
+   :ID:       79b17f45-c91f-463d-8306-12fded22e4c4
+   :END:
+
+- [[https://github.com/bixuanzju/emacs.d/blob/master/emacs-init.org][bixuanzju]] (moving to spacemacs)
+- [[http://blog.binchen.org][Chen's]] blog

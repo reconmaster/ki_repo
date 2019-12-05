@@ -1,0 +1,24 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:nil
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: org
+#+date: <2019-12-05 Thu>
+#+author: Andrew M Davis
+#+email: @reconmaster:matrix.org
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 26.3 (Org mode 9.2.5)
+The following resources give great examples of [[https://orgmode.org/][org mode]] in action.
+* guides
+- [[http://www.star.bris.ac.uk/bjm/emacs.html][guide]] from bristol university
+- [[http://orgmode.org/worg/org-dependencies.html][dependencies]]
+- [[http://www.youtube.com/watch?v%3Dht4JtEbFtFI&feature%3DBFa&list%3DSP7E11B34616530F5E][goatbar's screencast]]
+- [[http://www.clarkdonley.com/blog/2014-10-26-org-mode-and-writing-papers-some-tips.html][writing in org-mode]] has some good suggestions, and may be a better
+  way than using org-ref
+- [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][cookbook]] of org-mode examples
+- [[http://members.optusnet.com.au/~charles57/GTD/orgmode.html][Charles Cave's]] example of the GTD system with org-mode
+- [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][workflow]] example from Charles
+- some interesting org-mode [[http://orgmode.org/worg/org-hacks.html][hacks]]

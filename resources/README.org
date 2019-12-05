@@ -17,3 +17,7 @@ Nothing happens in a vacuum. All external intelligence sources used in
 the research endeavor must be accounted for. This allows the
 influences that affected the experimental design and procedures to be
 traced in future investigative efforts.
+* Tools
+- [[file:git.org][git]]
+- [[file:emacs.org][emacs]]
+- [[file:org.org][org]]
