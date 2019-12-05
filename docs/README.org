@@ -36,7 +36,7 @@ so much easier by ensuring both transparency and accountability. In
 generating [[https://en.wikipedia.org/wiki/Knowledge][knowledge]], this quality is important in mitigating the [[https://en.wikipedia.org/wiki/Bias][bias]]
 of the [[https://en.wikipedia.org/wiki/Observer_(physics)][observer]].
 
-Here are some [[file:resources/git.org][resources]] for learning how to use git.
+Here are some [[file:/resources/git.org][resources]] for learning how to use git.
 
 *** [[https://datasift.github.io/gitflow/IntroducingGitFlow.html][gitflow]]
  For our work flow, the `master` branch will contain the stable
