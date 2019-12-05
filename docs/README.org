@@ -37,25 +37,23 @@ generating [[https://en.wikipedia.org/wiki/Knowledge][knowledge]], this quality 
 of the [[https://en.wikipedia.org/wiki/Observer_(physics)][observer]].
 
 Here are some [[file:/resources/git.org][resources]] for learning how to use git.
-
 *** [[https://datasift.github.io/gitflow/IntroducingGitFlow.html][gitflow]]
- For our work flow, the `master` branch will contain the stable
- version of the code. Code in this branch should be fully tested and
- viable to produce publication-level results.
+A useful development model using git.
 
- If developing a new feature or modifying an aspect of the code,
- please create a new branch `git checkout -b feature_name` off of the
- `develop` branch. Once the code has been tested and is working, merge
- it back into master. Too many sub branches becomes confusing.
+For our development process, the `master` branch will contain the
+stable version of the code. Code in this branch should be fully tested
+and viable to produce publication-level results.
 
- Finally *NEVER* modify the git tree history once it has been pushed
- to the server repository. This will mess with everyone's local
- repositories. Modify commit history on your local branch between the
- server version and when you commit is fine as long as you know what
- you are doing. If you are unsure, please ask for help.
+If developing a new feature or modifying an aspect of the code, please
+create a new branch `git checkout -b feature_name` off of the
+`develop` branch. Once the feature has been tested and is working,
+merge it back into `develop`.
+
+Finally *NEVER* modify the git tree history once it has been pushed to
+the server repository. This will mess with everyone's local
+repositories. If you are unsure of what you are doing, please ask for
+help.
 ** [[https://www.gnu.org/software/emacs/][emacs]]
-I'll share with you what I can. Devel into the [[file:docs/README.org][docs]].
-
 #+begin_quote
 Emacs outshines all other editing software in approximately the same
 way that the noonday sun does the stars. It is not just bigger and
@@ -63,19 +61,43 @@ brighter; it simply makes everything else vanish.
 
 Neal Stephenson, "In the Beginning was the Command Line"
 #+end_quote
+Emacs is a very sophisticated piece of software. Not only is the
+language in which it is written ([[https://en.wikipedia.org/wiki/Lisp_(programming_language)][Lisp]]) very powerful, but the [[https://www.gnu.org/philosophy][GNU]]
+framework in which it is packaged is also rather beneficial.
 
+Here are some resources for learning how to use [[file:/resources/emacs.org][emacs]].
 ** [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org-mode]]
-You just have to use org. No other way around it.
+Org mode is a [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Major-Modes.html][major mode]] of emacs.
 
-This page. Every page.
-
-Read ([[https://orgmode.org/][RTFM]]) through the links and examples that are sourced throughout
-that entry. The site hosting the blog is done entirely in org-mode.
+While org files themselves are plain text files, editing these files
+in emacs inserts interface functionality for both the consumption and
+modification of the document.
 
 Solve the tower of [[https://orgmode.org/worg/org-contrib/babel/][babel]].
-* Code Compliance
-In the interest of readability and good [[https://en.wikipedia.org/wiki/Standard_operating_procedure][SOP]], the code is in the
-process of being updated to conform with [[https://www.python.org/dev/peps/pep-0008/][PEP8]] guidelines. This is the
+
+Here are some resources for learning how to use [[file:/resources/org.org][org]].
+* [[https://en.wikipedia.org/wiki/Language][Languages]]
+Selecting a coding language is itself an integral part of the research
+endeavor.
+
+In the interest of readability and good [[https://en.wikipedia.org/wiki/Standard_operating_procedure][SOP]], it is advantageous to
+adhere to grammatical conventions of the selected language. That is
+unless it is necessary to break the conventions to accommodate a new
+dimension of knowledge.
+
+Here are some of the languages used in this code.
+** [[https://en.wikipedia.org/wiki/Emacs_Lisp][Emacs Lisp]]
+The dialect of lisp used for emacs.
+** [[https://en.wikipedia.org/wiki/English_language][English]]
+A West Germanic language that has reached a global scale due in part
+to the [[https://en.wikipedia.org/wiki/Internet][internet]].
+** [[https://en.wikipedia.org/wiki/Japanese_language][日本語]]
+An East Asian language that contains a lot of similar technology to
+[[https://en.wikipedia.org/wiki/Chinese_language][Chinese]].
+** [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]]
+A high-level language that is very useful for scientific computing.
+
+For more legible code, the [[https://www.python.org/dev/peps/pep-0008/][PEP8]] guidelines are provided. This is the
 standard on all major python projects and will serve us well.
 
 PEP 8 syntax checkers exist for most major editors. For the *nix crowd
@@ -83,8 +105,8 @@ here are two examples.
 
 - [[http://elpy.readthedocs.org/en/latest/ide.html#syntax-checking][Emacs]]
 - [[http://www.vim.org/scripts/script.php?script_id=2914][Vim]]
-** Documentation
-To improve the interactive interface in IPython, every python method
+*** Methods
+To improve the interactive interface in [[https://ipython.org/][IPython]], every python method
 should have a docstring. If nothing else, a short description should
 be added. For more elaborate methods and classes, the docstring should
 include flags in the [[http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks][doxygen format for python]]. This makes the doxygen
