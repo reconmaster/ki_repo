@@ -15,5 +15,12 @@ Here are some useful resources for learning [[https://git-scm.com/][git]].
 * Tutorials
 - [[http://git-scm.com/doc][official documentation]]
 - [[https://www.atlassian.com/git/tutorials][bitbucket]]
+* Guides
+- [[https://sethrobertson.github.io/GitBestPractices/][best practices]]
+- [[https://stackoverflow.com/questions/315911/git-for-beginners-the-definitive-practical-guide][stackoverflow]] practical guide
+- [[https://sethrobertson.github.io/GitFixUm/fixup.html][fixing commits]]
+- [[http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html][commit message sop]]
 * Videos
 Some tutorial videos.
+- [[https://git-scm.com/videos][official]]
+- [[https://www.gitkraken.com/learn-git][gitkraken]]

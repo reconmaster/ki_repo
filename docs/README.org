@@ -38,16 +38,15 @@ of the [[https://en.wikipedia.org/wiki/Observer_(physics)][observer]].
 
 Here are some [[file:/resources/git.org][resources]] for learning how to use git.
 *** [[https://datasift.github.io/gitflow/IntroducingGitFlow.html][gitflow]]
-A useful development model using git.
+A useful development model for git.
 
-For our development process, the `master` branch will contain the
+For our development process, the /master/ branch will contain the
 stable version of the code. Code in this branch should be fully tested
 and viable to produce publication-level results.
 
 If developing a new feature or modifying an aspect of the code, please
-create a new branch `git checkout -b feature_name` off of the
-`develop` branch. Once the feature has been tested and is working,
-merge it back into `develop`.
+create a new branch off of the /develop/ branch. Once the feature has
+been tested and is working, merge it back into /develop/.
 
 Finally *NEVER* modify the git tree history once it has been pushed to
 the server repository. This will mess with everyone's local
@@ -93,7 +92,7 @@ A West Germanic language that has reached a global scale due in part
 to the [[https://en.wikipedia.org/wiki/Internet][internet]].
 ** [[https://en.wikipedia.org/wiki/Japanese_language][日本語]]
 An East Asian language that contains a lot of similar technology to
-[[https://en.wikipedia.org/wiki/Chinese_language][Chinese]].
+[[https://en.wikipedia.org/wiki/Chinese_language][漢語]].
 ** [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]]
 A high-level language that is very useful for scientific computing.
 
