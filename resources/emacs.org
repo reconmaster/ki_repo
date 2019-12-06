@@ -104,4 +104,6 @@ Does a lot of good work with emacs.
 - #emacs on irc.freenode.net
 * videos
 - [[https://www.youtube.com/watch?v=Iagbv974GlQ][Emacs Tutorial]]
+- [[https://www.youtube.com/watch?v=FtieBc3KptU][Emacs for Writers]]
+- [[https://www.youtube.com/watch?v=gk39mp8Vy4M][Writing Games with Emacs]]
 - [[https://www.youtube.com/watch?v=JWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]]
