@@ -21,12 +21,17 @@ completing the builtin tutorial.
 C-h t
 #+end_src
 * guides
+- [[https://www.emacswiki.org/][emacswiki]]
 - [[http://emacsrocks.com/][emacsrocks]]
 - [[https://www.masteringemacs.org/][masteringemacs]]
 - [[http://whattheemacsd.com/][what the .emacs.d!?]]
 * examples
 Here is a list of all the dotfiles I have used as references when
-building my own configuration
+building my own configuration.
+
+This is a nice overview of example configurations from github.
+
+- [[https://github.com/caisah/emacs.dz][emacs.dz]]
 ** [[https://github.com/howardabrams/dot-files][Howard Abrams]]
    :PROPERTIES:
    :ID:       4abdf06e-ecfb-4f67-9a58-d00c4bede2c2
@@ -34,6 +39,7 @@ building my own configuration
 
 Very nice collection of dotfiles for both emacs and other system
 dotfiles. Gives a nice talk on [[https://www.youtube.com/watch?v=dljNabciEGg][literate devops]].
+** [[https://alhassy.github.io/init/][Musa Al-hassy]]
 ** [[http://aaronbedra.com/emacs.d/#org-mode][Aaron Bedra]]
    :PROPERTIES:
    :ID:       3bc4b0fa-a072-437e-9d4d-e648432032ac
@@ -93,3 +99,6 @@ Does a lot of good work with emacs.
 
 - [[https://github.com/bixuanzju/emacs.d/blob/master/emacs-init.org][bixuanzju]] (moving to spacemacs)
 - [[http://blog.binchen.org][Chen's]] blog
+* communities
+- [[https://www.reddit.com/r/emacs/][/r/emacs]]
+- #emacs on irc.freenode.net
