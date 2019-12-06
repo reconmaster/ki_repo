@@ -1,0 +1,2390 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:nil
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: org
+#+date: <2019-12-06 Fri>
+#+author: Andrew M Davis
+#+email: @reconmaster:matrix.org
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 26.3 (Org mode 9.2.5)
+Objective: Optimize [[https://orgmode.org/][org mode]]
+* Introduction
+Here are some initial ideas for configuring [[http://www.andrewmichaeldavis.com/emacs/lprog/org/web/2016/03/26/bring-org-to-the-web/][org mode]] for research.
+* [[http://orgmode.org/][org-mode]]
+** [[https://github.com/jkitchin/jmax/blob/master/ox-archive.el][ox-archive]]
+Package from John for completely self-contained org archive.
+
+** org-bbdb
+#+BEGIN_SRC emacs-lisp
+;; (use-package org-bbdb)
+(add-to-list 'org-modules 'org-bbdb)
+#+END_SRC
+** [[https://github.com/Kungsgeten/org-brain][org-brain]]
+- [[http://blog.thebrain.com/][blog]] from thebrain.com
+- [[https://blog.thebrain.com/thought-relationships/][article]] about thought relationships
+#+BEGIN_SRC emacs-lisp
+(use-package org-brain :ensure t
+  :init
+  (setq org-brain-path "~/cloud/org")
+  :config
+  ;; ;; Save/load org-brain caches to/from disk
+  ;; (org-brain-activate-cache-saving)
+
+  ;; deft
+  (defun org-brain-deft ()
+  "Use `deft' for files in `org-brain-path'."
+  (interactive)
+  (let ((deft-directory org-brain-path)
+        (deft-recursive t)
+        (deft-extensions '("org")))
+    (deft)))
+  )
+#+END_SRC
+** org-bullets
+From Howard's setup.
+
+- [[https://github.com/sabof/org-bullets][org-bullets]]
+
+Here is my approach for quickly making the initial asterisks for
+listing items and whatnot, appear as Unicode bullets (without actually
+affecting the text file or the behavior).
+
+Before we load =org-mode= proper, we need to set the following syntax
+high-lighting parameters. These are used to help bring out the source
+code during literate programming mode.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :init (add-hook 'org-mode-hook 'org-bullets-mode))
+#+END_SRC
+
+** [[https://julien.danjou.info/projects/emacs-packages#org-contacts][org-contacts]]
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-contacts
+  :init (require 'org-contacts)
+  :config
+  )
+#+END_SRC
+** org-crypt
+#+BEGIN_SRC emacs-lisp
+(require 'org-crypt)
+
+;; keybindings
+;; (global-set-key (kbd "C-x c d") 'org-decrypt-entry)
+(bind-key "C-x c d" 'org-decrypt-entry)
+(bind-key "C-x c D" 'org-decrypt-entries)
+
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+(setq org-crypt-key "")
+;; GPG key to use for encryption
+;; Either the Key ID or set to nil to use symmetric encryption.
+
+(setq org-crypt-disable-auto-save 'encrypt)
+;; (setq org-crypt-disable-auto-save nil)
+;; (setq auto-save-default nil)
+;; Auto-saving does not cooperate with org-crypt.el: so you need
+;; to turn it off if you plan to use org-crypt.el quite often.
+;; Otherwise, you'll get an (annoying) message each time you
+;; start Org.
+
+;; To turn it off only locally, you can insert this:
+;;
+;; # -*- buffer-auto-save-file-name: nil; -*-
+
+;; keybindings
+;; (global-set-key (kbd "C-x c d") 'org-decrypt-entry)
+(require 'bind-key)
+(bind-key "C-x c d" 'org-decrypt-entry org-mode-map)
+(bind-key "C-x c D" 'org-decrypt-entries org-mode-map)
+#+END_SRC
+** [[https://github.com/abo-abo/org-download][org-download]]
+Drag and drop images from browser and file system into org-mode
+
+- another package from abo-abo
+#+BEGIN_SRC emacs-lisp
+(use-package org-download
+  :ensure t
+  :config
+  (setq-default org-download-image-dir "~/Downloads/imgs")
+  (setq-default org-download-heading-lvl nil)
+  (require 'org-download)
+  )
+
+#+END_SRC
+
+** org-id
+This looks like a much better way to link across the different
+org files without conflicting names.
+
+- As the generate ids on save is causing issues with org-crypt after
+  upgrading to 25, I think I would prefer a generate link on
+  org-copy-location
+
+- setup copied from this [[https://stackoverflow.com/questions/24643132/emacs-orgmode-todo-item-automatically-generates-property-drawer][discussion]]
+- create ids on save from [[https://stackoverflow.com/questions/13340616/assign-ids-to-every-entry-in-org-mode][here]]
+- interesting approach in a newer [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][article]]
+
+- This method works but the initial save takes forever. However, I
+  think using the unique id's is a far better way for the growing
+  number of links I have
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-id
+  :config
+  ;; Use global IDs
+  (setq org-id-link-to-org-use-id t)
+
+  ;; Update ID file .org-id-locations on startup
+  (org-id-update-id-locations)
+
+  ;; ;; create missing ids on save
+  ;; (defun ad/org-add-ids-to-headlines-in-file ()
+  ;;   "Add ID properties to all headlines in the current file which do not already have one."
+  ;;   (interactive)
+  ;;   (org-map-entries 'org-id-get-create))
+
+  ;; (add-hook 'org-mode-hook
+  ;;         (lambda ()
+  ;;           (add-hook 'before-save-hook 'ad/org-add-ids-to-headlines-in-file nil 'local)))
+  )
+#+END_SRC
+** [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol]]
+Create capture notes in org-mode from other applications. I use this
+to create tasks to review interesting web pages I visit in Firefox.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-protocol)
+#+END_SRC
+
+** [[https://github.com/jkitchin/jmax/blob/master/ox-manuscript.el][ox-manuscript]]
+Package from John for exporting manuscripts from org-mode. I need to
+modify it so that it fits my workflow/journal needs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-manuscript
+  :load-path "plugins/org")
+#+END_SRC
+** org-mode
+This is what motivated the transition to this use-package
+approach. Trying to keep up with the git repo distribution lead to
+problems with fontification with errors between the manual install and
+the builtin org.
+
+[[https://emacs.stackexchange.com/questions/17710/use-package-with-config-to-set-variables][stackexchange]] example of using use-package
+
+*** config
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  ;; :load-path "~/src/org-mode/"
+  ;; ignore org-mode from upstream and use a manually installed version
+  ;; :pin manual
+  :mode (("\\.org$" . org-mode))
+  :ensure t
+  :ensure org-plus-contrib
+  :after org-bullets
+  :after pyenv-mode
+  :init
+  ;; Chicago lat/lng
+  (setq calendar-longitude -87.6)
+  (setq calendar-latitude +41.8)
+
+  ;; unicode bullets without affecting text file
+  (font-lock-add-keywords 'org-mode
+                          '(("^ +\\([-*]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  :config
+  ;; modules
+  ;; Enable habit tracking (and a bunch of other modules)
+  ;; (setq org-modules (quote (;; org-bbdb
+  ;;                           ;; org-bibtex
+  ;;                           ;; org-crypt
+  ;;                           ;; org-gnus
+  ;;                           org-id
+  ;;                           ;; org-info
+  ;;                           ;; org-jsinfo
+  ;;                           org-habit
+  ;;                           ;; org-inlinetask
+  ;;                           ;; org-irc
+  ;;                           ;; org-mew
+  ;;                           ;; org-mhe
+  ;;                           ;; org-protocol
+  ;;                           ;; org-rmail
+  ;;                           ;; org-vm
+  ;;                           ;; org-wl
+  ;;                           ;; org-w3m
+  ;;                           )))
+  ;; (add-to-list 'org-modules 'org-habit)
+  ;; (add-to-list 'org-modules 'org-id)
+  (add-hook 'org-mode-hook 'auto-revert-mode)
+
+  (setq org-image-actual-width 550)
+  (setq org-highlight-latex-and-related '(latex script entities))
+
+  ;; some display customization
+  (setq org-pretty-entities t
+        org-startup-truncated t
+        org-startup-align-all-tables t
+        )
+
+  ;; clickable links
+  (setq org-return-follows-link t)
+
+  ;; fuzzy search
+  '(org-link-search-must-match-exact-headline nil)
+
+  ;; default with images open, takes too long
+  ;;(setq org-startup-with-inline-images "inlineimages")
+
+  ;; flyspell mode for spell checking everywhere
+  (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
+
+  ;; default applications
+
+  ;; okular for linux
+  ;; (when (eq system-type 'gnu/linux)
+  ;;   (delete '("\\.pdf\\'" . default) org-file-apps)
+  ;;   (add-to-list 'org-file-apps '("pdf" . "okular %s"))
+  ;;   )
+
+  ;; video files
+  (add-to-list 'org-file-apps '("mp4" . "vlc %s"))
+  )
+#+END_SRC
+*** agenda
+Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a6595450fcd0e787c/Sacha.org#org-agenda][this]] =delq= and =mapcar= trick from Sacha Chua's config.
+
+- [[http://orgmode.org/guide/Agenda-commands.html][agenda commands]]
+- [[http://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html][worg]] guide to custom agenda commands
+
+#+begin_src emacs-lisp
+(setq org-agenda-files
+      (delq nil
+            (mapcar (lambda (x) (and (file-exists-p x) x))
+                    '("~/cloud/bibliography/notes.org"
+                      ))))
+
+;; jmax
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-timestamp-if-done t)
+(setq org-agenda-todo-ignore-scheduled nil)
+(setq org-agenda-todo-ignore-deadlines nil)
+(setq org-agenda-todo-ignore-timestamp t)
+(setq org-agenda-todo-ignore-with-date t)
+(setq org-agenda-start-on-weekday nil) ;; start on current day
+
+(setq org-upcoming-deadline '(:foreground "blue" :weight bold))
+
+;; record time I finished a task when I change it to DONE
+(setq org-log-done 'time)
+#+end_src
+**** clock
+[[http://www.gnu.org/software/emacs/manual/html_node/org/Clocking-work-time.html][clocking time]] entry.
+
+#+begin_src emacs-lisp
+;;
+;; Resume clocking task when emacs is restarted
+(org-clock-persistence-insinuate)
+;;
+;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+(setq org-clock-history-length 23)
+;; Resume clocking task on clock-in if the clock is open
+(setq org-clock-in-resume t)
+;; Save the running clock and all clock history when exiting Emacs, load it on startup
+(setq org-clock-persist t)
+
+;; Resume clocking task when emacs is restarted
+(org-clock-persistence-insinuate)
+;; Do not prompt to resume an active clock
+(setq org-clock-persist-query-resume nil)
+;; Enable auto clock resolution for finding open clocks
+(setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+;; Include current clocking task in clock reports
+(setq org-clock-report-include-clocking-task t)
+;; Use discrete minute intervals
+(setq org-time-stamp-rounding-minutes (quote (1 1)))
+
+;; Separate drawers for clocking and logs
+(setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+;; Save clock data and state changes and notes in the LOGBOOK drawer
+(setq org-clock-into-drawer t)
+;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+(setq org-clock-out-remove-zero-time-clocks t)
+;; Clock out when moving task to a done state
+(setq org-clock-out-when-done t)
+
+;; give me some warning of upcoming deadlines
+(setq org-deadline-warning-days 30)
+#+end_src
+
+**** habits
+- [[http://orgmode.org/worg/org-tutorials/tracking-habits.html][worg]] entry on habits
+- [[http://orgmode.org/manual/Tracking-your-habits.html][org-habit]] module
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-modules 'org-habit t)
+
+(require 'org-habit)
+
+;; position the habit graph on the agenda to the right of the default
+(setq org-habit-graph-column 50)
+#+END_SRC
+
+**** mobile org
+All this organization is good, but it's really powerful when it can be
+accessed even when I am away from my computer.
+
+- [[https://github.com/matburt/mobileorg-android/wiki][android]]
+- [[https://github.com/MobileOrg/mobileorg.github.io][ios]]
+
+[[https://gist.github.com/mrvdb/3111823][asynchronous push/pull]] setup that syncs during idle time with code in
+use-package for org-mode
+
+#+BEGIN_SRC emacs-lisp
+;; Set to the location of your Org files on your local system
+(setq org-directory "~/cloud/org")
+;; Set to the name of the file where new notes will be stored
+;; (setq org-mobile-inbox-for-pull "~/cloud/org/inbox.org")
+(setq org-mobile-inbox-for-pull (concat org-directory "/refile.org"))
+;; Set MobileOrg root directory
+(setq org-mobile-directory "~/cloud/MobileOrg")
+;; notes
+(setq org-default-notes-file (concat org-directory "/refile.org"))
+#+END_SRC
+
+[[https://stackoverflow.com/questions/8432108/how-to-automatically-do-org-mobile-push-org-mobile-pull-in-emacs][stackexchange]] for doing asynchronous push/pull, disabling for now
+since it freezes emacs when running.
+
+#+BEGIN_SRC emacs-lisp
+(defvar org-mobile-sync-timer nil)
+(defvar org-mobile-sync-idle-secs (* 60 60))
+
+(defun org-mobile-sync ()
+  (interactive)
+  (org-mobile-pull)
+  (org-mobile-push))
+
+(defun org-mobile-sync-enable ()
+  "enable mobile org idle sync"
+  (interactive)
+  (setq org-mobile-sync-timer
+        (run-with-idle-timer org-mobile-sync-idle-secs t
+                             'org-mobile-sync)));
+(defun org-mobile-sync-disable ()
+  "disable mobile org idle sync"
+  (interactive)
+  (cancel-timer org-mobile-sync-timer))
+
+;; (org-mobile-sync-enable)
+#+END_SRC
+
+[[https://gist.github.com/mrvdb/3111823][another]] setup that syncs during idle time?
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; Show a notification when a push has been completed
+(require 'notifications)
+(defun notify-push (result)
+  (notifications-notify
+   :title "Push complete"
+   :body  (format "Org-mobile-push: %s" result)
+  )
+)
+
+;; Fork the work of pushing to mobile
+(require 'async)
+(defun fork-org-push-mobile ()
+  (async-start
+   ;; What to do in the child process
+   `(lambda ()
+      ,(async-inject-variables "org-\\(mobile-\\|directory\\)")
+      (org-mobile-push))
+
+   ; What to do when it finishes
+   (lambda (result)
+     (notify-push result))))
+
+;; Define a timer variable
+(defvar org-mobile-push-timer nil
+  "Timer that `org-mobile-push-timer' used to reschedule itself, or nil.")
+
+;; Push to mobile when the idle timer runs out
+(defun org-mobile-push-with-delay (secs)
+  (when org-mobile-push-timer
+    (cancel-timer org-mobile-push-timer))
+  (setq org-mobile-push-timer
+        (run-with-idle-timer
+         (* 1 secs) nil 'fork-org-push-mobile)))
+
+;; After saving files, start a 30 seconds idle timer after which we
+;; are going to push
+(add-hook 'after-save-hook
+ (lambda ()
+   (when (eq major-mode 'org-mode)
+     (dolist (file (org-mobile-files-alist))
+       (if (string= (expand-file-name (car file)) (buffer-file-name))
+           (org-mobile-push-with-delay 30)))
+   )))
+
+;; At least run it once a day, but no need for a delay this time
+(run-at-time "00:05" 86400 '(lambda () (org-mobile-push-with-delay 1)))
+#+END_SRC
+*** [[http://orgmode.org/worg/org-contrib/babel/intro.html][babel]]
+- [[https://org-babel.readthedocs.io/en/latest/][docs]]
+- [[http://orgmode.org/manual/results.html#results][results]] formatting
+**** [[http://orgmode.org/worg/org-contrib/babel/languages/][languages]]
+A lot to choose from.
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((asymptote .t)
+   (C . t)
+   (calc . t)
+   (emacs-lisp . t)
+   (ein . t)
+   (gnuplot . t)
+   (java . t)
+   (js . t)
+   (latex . t)
+   (lisp . t)
+   (python . t)
+   (shell . t)
+   (matlab . t)
+   (sqlite . t)
+   (ruby . t)
+   (perl . t)
+   (org . t)
+   (dot . t)
+   (plantuml . t)
+   ;; (R . t)
+   (scheme . t)
+   ))
+#+end_src
+
+#+begin_src emacs-lisp
+;; ;; From jmax but other option looks safer
+;; ;; enable prompt-free code running
+;; (setq org-confirm-babel-evaluate nil
+;;       org-confirm-elisp-link-function nil
+;;       org-confirm-shell-link-function nil)
+
+(defun my-org-confirm-babel-evaluate (lang body)
+  "Do not confirm evaluation for these languages."
+  (not (or (string= lang "asymptote")
+           (string= lang "C")
+           (string= lang "ipython")
+           (string= lang "java")
+           (string= lang "python")
+           (string= lang "emacs-lisp")
+           (string= lang "latex")
+           (string= lang "sqlite"))))
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+;; do not evaluate code on export by default
+;; (setq org-export-babel-evaluate nil)
+#+end_src
+**** source blocks
+From mai as well.
+
+I like to have source blocks properly syntax highlighted and with the
+editing popup window staying within the same window so all the windows
+don't jump around. Also, having the top and bottom trailing lines in
+the block is a waste of space, so we can remove them.
+
+I noticed that fontification doesn't work with markdown mode when the
+block is indented after editing it in the org src buffer---the leading
+#s for headers don't get fontified properly because they appear as Org
+comments. Setting ~org-src-preserve-indentation~ makes things
+consistent as it doesn't pad source blocks with leading spaces.
+
+#+begin_src emacs-lisp
+(setq
+ ;; fold code blocks initially
+ ;; org-hide-block-startup t
+ ;; use syntax highlighting in org-file code blocks
+ org-src-fontify-natively t
+ ;; no extra indentation
+ org-src-preserve-indentation t
+ org-src-strip-leading-and-trailing-blank-lines t
+ org-src-tab-acts-natively t
+ ;; don't mess up my windows
+ org-src-window-setup 'current-window
+ )
+#+end_src
+
+Here is some of the stuff from jmax I had been using.
+
+#+BEGIN_SRC emacs-lisp
+;; make code blocks stand out a little from my gray80 background
+;;(set-face-attribute 'org-block-background nil :background "white smoke")
+
+;; (when (eq system-type 'darwin) ;; mac specific settings
+;;   (set-face-attribute 'org-block-background nil :background "DeepSkyBlue4")
+;;   )
+
+;; ;; language specific headers. I think this comes before the defaults. Messes up tangling.
+;; (setq org-babel-default-header-args:emacs-lisp
+;;       (cons '(:results . "value replace")
+;;             (assq-delete-all :results org-babel-default-header-args)))
+
+;; set default :results to output
+;; (setq org-babel-default-header-args
+;;       (cons '(:results . "output replace")
+;;             (assq-delete-all :results org-babel-default-header-args)))
+
+;; set default exports to both code and results
+;; (setq org-babel-default-header-args
+;;       (cons '(:exports . "both")
+;;             (assq-delete-all :exports org-babel-default-header-args)))
+
+;; use this code in emacs-lisp for folding code.
+(global-set-key (kbd "C-M-]") (lambda () (interactive) (org-cycle t)))
+(global-set-key (kbd "M-]") (lambda ()
+                              (interactive)
+                              (ignore-errors
+                                (end-of-defun)
+                                (beginning-of-defun))
+                              (org-cycle)))
+
+;; use ido completion wherever possible
+;; (setq org-completion-use-ido t)
+#+END_SRC
+***** block expansion
+From [[https://github.com/jkitchin/jmax/blob/master/jmax-org.el][jmax]].
+#+BEGIN_SRC emacs-lisp
+(require 'org-tempo)
+;; add <ips for ipython session expansion
+;; (add-to-list 'org-structure-template-alist
+;;              '("ips" "#+BEGIN_SRC ipython :session\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>"))
+
+;; ;; add <p for python expansion
+;; (add-to-list 'org-structure-template-alist
+;;              '("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>"))
+
+;; ;; add <por for python expansion with raw output
+;; (add-to-list 'org-structure-template-alist
+;;              '("por" "#+BEGIN_SRC python :results output raw\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>"))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("por" "#+BEGIN_SRC python :results output raw\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>"))
+
+;; ;; add <pv for python expansion with value
+;; (add-to-list 'org-structure-template-alist
+;;              '("pv" "#+BEGIN_SRC python :results value\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>"))
+
+;; ;; add <el for emacs-lisp expansion
+;; (add-to-list 'org-structure-template-alist
+;;              '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>"))
+
+;; ;; add <sh for shell
+;; (add-to-list 'org-structure-template-alist
+;;              '("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" "<src lang=\"shell\">\n?\n</src>"))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("lh" "#+latex_header: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("lc" "#+latex_class: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("lco" "#+latex_class_options: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("ao" "#+attr_org: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("al" "#+attr_latex: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("ca" "#+caption: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("tn" "#+tblname: " ""))
+
+;; (add-to-list 'org-structure-template-alist
+;;              '("n" "#+name: " ""))
+#+END_SRC
+
+**** [[http://kitchingroup.cheme.cmu.edu/blog/2015/11/20/Asynchronously-running-python-blocks-in-org-mode/][Asynchronously running python blocks in org-mode]]
+Can keep code running without freezing emacs.
+
+- [ ] Configure this so that it works for ipython blocks as well.
+
+ #+BEGIN_SRC emacs-lisp
+(defun org-babel-async-execute:python ()
+  "Execute the python src-block at point asynchronously.
+  :var headers are supported.
+  :results output is all that is supported for output.
+
+  A new window will pop up showing you the output as it appears,
+  and the output in that window will be put in the RESULTS section
+  of the code block."
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (uuid (org-id-uuid))
+         (code (org-element-property :value (org-element-context)))
+         (temporary-file-directory ".")
+         (tempfile (make-temp-file "py-"))
+         (pbuffer (format "*%s*" uuid))
+         (varcmds (org-babel-variable-assignments:python
+                   (nth 2 (org-babel-get-src-block-info))))
+         process)
+
+    ;; get rid of old results, and put a place-holder for the new results to
+    ;; come.
+    (org-babel-remove-result)
+
+    (save-excursion
+      (re-search-forward "#\\+END_SRC")
+      (insert (format
+               "\n\n#+RESULTS: %s\n: %s"
+               (or (org-element-property :name (org-element-context))
+                   "")
+               uuid)))
+
+    ;; open the results buffer to see the results in.
+    (switch-to-buffer-other-window pbuffer)
+
+    ;; Create temp file containing the code.
+    (with-temp-file tempfile
+      ;; if there are :var headers insert them.
+      (dolist (cmd varcmds)
+        (insert cmd)
+        (insert "\n"))
+      (insert code))
+
+    ;; run the code
+    (setq process (start-process
+                   uuid
+                   pbuffer
+                   "python"
+                   tempfile))
+
+    ;; when the process is done, run this code to put the results in the
+    ;; org-mode buffer.
+    (set-process-sentinel
+     process
+     `(lambda (process event)
+        (save-window-excursion
+          (save-excursion
+            (save-restriction
+              (with-current-buffer (find-file-noselect ,current-file)
+                (goto-char (point-min))
+                (re-search-forward ,uuid)
+                (beginning-of-line)
+                (kill-line)
+                (insert
+                 (mapconcat
+                  (lambda (x)
+                    (format ": %s" x))
+                  (butlast (split-string
+                            (with-current-buffer
+                                ,pbuffer
+                              (buffer-string))
+                            "\n"))
+                  "\n"))))))
+        ;; delete the results buffer then delete the tempfile.
+        ;; finally, delete the process.
+        (when (get-buffer ,pbuffer)
+          (kill-buffer ,pbuffer)
+          (delete-window))
+        (delete-file ,tempfile)
+        (delete-process process)))))
+ #+END_SRC
+**** \LaTeX
+     :PROPERTIES:
+     :ID:       086d174c-9d92-40d7-87db-8e3ebb8eca95
+     :END:
+Some configurations for \LaTeX code blocks
+***** configuration
+#+begin_src emacs-lisp
+;; light-weight math editing like in AUCTEX
+;; (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+;; get latex preview working
+(setq org-latex-create-formula-image-program 'imagemagick)
+#+end_src
+**** term
+ Found this [[https://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg00875.html][message]] regarding how to run babel command in the term.
+
+ Can be used like this
+
+ #+BEGIN_SRC sh :term t :tangle no
+ ping google.com
+ #+END_SRC
+
+ #+begin_src emacs-lisp
+ (defadvice org-babel-execute:sh (around reconmaster activate)
+   (if (assoc-default :term (ad-get-arg 1) nil)
+       (let ((buffer (make-term "babel" "/bin/zsh")))
+         (with-current-buffer buffer
+           (insert (org-babel-expand-body:generic
+                    body params (org-babel-variable-assignments:sh params)))
+           (term-send-input))
+         (pop-to-buffer buffer))
+     ad-do-it))
+ #+end_src
+**** [[http://plantuml.sourceforge.net/download.html][PlantUML]]
+ - make sure graphviz is installed
+ - put plantuml.jar in the following path
+ #+begin_src emacs-lisp
+   (setq plantuml-jar-path
+         (expand-file-name "~/src/plantuml.jar"))
+
+   (setq org-plantuml-jar-path
+         (expand-file-name "~/src/plantuml.jar"))
+
+   ;; autocomplete with tab
+   (add-hook 'plantuml-mode-hook
+             (lambda () (local-set-key (kbd "TAB") 'plantuml-complete-symbol)))
+
+
+ #+end_src
+**** [[https://github.com/gregsexton/ob-ipython/][ob-ipython]]
+Run ipython through org-mode documents!
+
+While this does work, the lack of remote support and conflict with
+elpy makes me think it is better to just use plain python blocks in
+org and edit with elpy's ipython backend.
+
+I also discovered that the inline approach changes the size of the
+images which was creating artifacts in my displayed images. I will try
+to keep this enabled now that I think it isn't so much a conflict,
+just a different way of doing things.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ob-ipython
+  :ensure t
+  :bind (("C-c i" . ob-ipython-inspect)
+         )
+  :init
+  (require 'ob-ipython)
+  :config
+  ;; don't prompt me to confirm everytime I want to evaluate a block
+  ;; (setq org-confirm-babel-evaluate nil)
+
+  ;; display/update images in the buffer after I evaluate
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+  )
+#+END_SRC
+**** yaml
+ - [[http://swaac.tamouse.org/emacs/org-mode/2015/05/25/using-emacss-org-mode-and-editing-yaml-frontmatter-in-jekyll-posts/][useful]] guide here
+
+ #+BEGIN_SRC emacs-lisp
+   ;; for yaml
+   (defun org-babel-execute:yaml (body params) body)
+ #+END_SRC
+*** keybindings
+ Set up some global key bindings that integrate with Org Mode features. Couldn't get them to work with the use-package bind:
+
+ Speed commands are a nice and quick way to perform certain actions while at the beginning of a heading. It's not activated by default.
+
+ See the doc for speed keys by checking out [[elisp:(info%20"(org)%20speed%20keys")][the documentation for speed keys in Org mode]].
+
+ #+begin_src emacs-lisp
+ (bind-key "C-c l" 'org-store-link)
+ (bind-key "C-c c" 'org-capture)
+ (bind-key "C-c a" 'org-agenda)
+                                         ; convenient switching between open org-buffers
+ (bind-key "C-c b" 'org-iswitchb)
+ (bind-key "C-c L" 'org-insert-link-global)
+ (bind-key "C-c o" 'org-open-at-point-global)
+
+ (setq org-use-speed-commands t)
+ ;; activate single letter commands at beginning of a headline.
+ ;; User-defined Speed commands
+ ;; ===========================
+
+ ;; Built-in Speed commands
+ ;; =======================
+
+ ;; Outline Navigation
+ ;; ------------------
+ ;; n   (org-speed-move-safe (quote outline-next-visible-heading))
+ ;; p   (org-speed-move-safe (quote outline-previous-visible-heading))
+ ;; f   (org-speed-move-safe (quote org-forward-heading-same-level))
+ ;; b   (org-speed-move-safe (quote org-backward-heading-same-level))
+ ;; F   org-next-block
+ ;; B   org-previous-block
+ ;; u   (org-speed-move-safe (quote outline-up-heading))
+ ;; j   org-goto
+ ;; g   (org-refile t)
+
+ ;; Outline Visibility
+ ;; ------------------
+ ;; c   org-cycle
+ ;; C   org-shifttab
+ ;;     org-display-outline-path
+ ;; s   org-narrow-to-subtree
+ ;; =   org-columns
+
+ ;; Outline Structure Editing
+ ;; -------------------------
+ ;; U   org-shiftmetaup
+ ;; D   org-shiftmetadown
+ ;; r   org-metaright
+ ;; l   org-metaleft
+ ;; R   org-shiftmetaright
+ ;; L   org-shiftmetaleft
+ ;; i   (progn (forward-char 1) (call-interactively (quote org-insert-heading-respect-content)))
+ ;; ^   org-sort
+ ;; w   org-refile
+ ;; a   org-archive-subtree-default-with-confirmation
+ ;; @   org-mark-subtree
+ ;; #   org-toggle-comment
+
+ ;; Clock Commands
+ ;; --------------
+ ;; I   org-clock-in
+ ;; O   org-clock-out
+
+ ;; Meta Data Editing
+ ;; -----------------
+ ;; t   org-todo
+ ;; ,   (org-priority)
+ ;; 0   (org-priority 32)
+ ;; 1   (org-priority 65)
+ ;; 2   (org-priority 66)
+ ;; 3   (org-priority 67)
+ ;; :   org-set-tags-command
+ ;; e   org-set-effort
+ ;; E   org-inc-effort
+ ;; W   (lambda (m) (interactive "sMinutes before warning: ") (org-entry-put (point) "APPT_WARNTIME" m))
+
+ ;; Agenda Views etc
+ ;; ----------------
+ ;; v   org-agenda
+ ;; /   org-sparse-tree
+
+ ;; Misc
+ ;; ----
+ ;; o   org-open-at-point
+ ;; ?   org-speed-command-help
+ ;; <   (org-agenda-set-restriction-lock (quote subtree))
+ ;; >   (org-agenda-remove-restriction-lock)
+ #+end_src
+
+*** [[https://www.gnu.org/software/emacs/manual/html_node/org/Cooperation.html][cooperating packages]]
+**** constants.el
+ Settings for using constants.
+
+ #+begin_src emacs-lisp
+   ;; (autoload 'constants-insert "constants" "Insert constants into source." t)
+   ;; (autoload 'constants-get "constants" "Get the value of a constant." t)
+   ;; (autoload 'constants-replace "constants" "Replace name of a constant." t)
+   ;; (define-key global-map "\C-cci" 'constants-insert)
+   ;; (define-key global-map "\C-ccg" 'constants-get)
+   ;; (define-key global-map "\C-ccr" 'constants-replace)
+   ;; (setq constants-unit-system 'SI)   ;  this is the default
+
+   ;; ;; Use "cc" as the standard variable name for speed of light,
+   ;; ;; "bk" for Boltzmann's constant, and "hp" for Planck's constant
+   ;; (setq constants-rename '(("cc" . "c") ("bk" . "k") ("hp" . "h")))
+
+   ;; ;; A default list of constants to insert when none are specified
+   ;; (setq constants-default-list "cc,bk,hp")
+ #+end_src
+*** export
+- updated export [[http://orgmode.org/tmp/worg/org-tutorials/org-latex-export.html][guide]]
+- example of export [[https://damitr.org/2014/01/09/latex-tufte-class-in-org-mode/][tufte]] style from org
+#+BEGIN_SRC emacs-lisp
+;; requirements
+(require 'ox-beamer)
+(require 'org-inlinetask)
+(require 'ox-latex)
+(require 'ox-md)
+(require 'org-mouse)
+;; (require 'ox-odt)
+(require 'ox-texinfo)
+#+END_SRC
+**** \LaTeX
+Previously had latex export stuff under Babel. While \LaTeX code
+blocks can be handeled in Babel, it is probably more correct to place
+these commands under the export functionality.
+- [[http://orgmode.org/worg/org-contrib/babel/examples/article-class.html][guide]] to modifying org-article class (jmax uses this)
+- jmax guide to exporting [[https://github.com/jkitchin/jmax/blob/master/examples/technical-documents-in-org.org][manuscripts]]
+***** defaults
+      A lot of these came from [[https://github.com/jkitchin/jmax/blob/master/jmax-org.el][jmax]].
+
+#+BEGIN_SRC emacs-lisp
+;; default packages
+(setq org-latex-default-packages-alist
+      '(("backend=bibtex8,citestyle=numeric,sorting=none,doi=false,url=false,isbn=false,backref=false" "biblatex" t)
+        ("utf8" "inputenc" t)
+        ("" "lmodern" nil)
+        ("T1" "fontenc" t)
+        ("" "graphicx" t)
+        ("" "longtable" nil)
+        ("" "float" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "amsmath" t)
+        ("" "textcomp" t)
+        ("" "marvosym" t)
+        ("" "wasysym" t)
+        ("" "amssymb" t)
+        ("" "amsmath" t)
+        ("numbers,super,sort&compress" "natbib" t)
+        ("" "natmove" nil)
+        ("" "url" t)
+        ("" "minted" t)
+        ("" "underscore" t) ("linktocpage,pdfstartview=FitH,colorlinks,linkcolor=blue,anchorcolor=blue,citecolor=blue,filecolor=blue,menucolor=blue,urlcolor=blue" "hyperref" t)
+        ("" "fancyhdr" t)
+        ("" "lastpage" t)
+        ("" "subcaption" t)
+        ("" "setspace" t)
+        ("" "svg" t)
+        ("" "xspace" t)
+        ("" "attachfile" t)))
+
+;; do not put in \hypersetup use your own
+;; \hypersetup{pdfkeywords={%s},\n pdfsubject={%s},\n pdfcreator={%s}
+(setq org-latex-with-hyperref nil)
+
+;; clean up the intermediates
+(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "pyg" "run.xml")))
+
+;; this is for code syntax highlighting in export
+(setq org-latex-listings 'minted)
+(setq org-latex-minted-options
+      '(("frame" "lines")
+        ("fontsize" "\\scriptsize")
+        ("linenos" "")))
+
+;; avoid getting \maketitle right after begin{document}
+;; you should put \maketitle if and where you want it.
+(setq org-latex-title-command "")
+#+END_SRC
+
+***** bibliography
+The references for bibliography commands came from [[http://orgmode.org/worg/exporters/anno-bib-template-worg.html#sec-5][here]].
+
+#+BEGIN_SRC emacs-lisp
+;; Use bibtex
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "bibtex %b"
+        "makeindex %b"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; ;; Use biber
+;; (setq org-latex-pdf-process
+;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;;         "biber %b"
+;;         "makeindex %b"
+;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; Org's internal labeling system gives me some trouble with LaTeX
+(setq org-latex-prefer-user-labels t)
+#+END_SRC
+***** [[http://orgmode.org/worg/org-contrib/babel/examples/article-class.html][article class]]
+#+begin_src emacs-lisp
+;; customized article. better margins
+(add-to-list 'org-latex-classes
+             '("ad-article"                          ;class-name
+               "\\documentclass{article}
+ [PACKAGES]
+ \\usepackage[backend=bibtex8,citestyle=numeric,sorting=none,doi=false,url=false,isbn=false,backref=false]{biblatex}
+ \\addbibresource{ref}
+ \\usepackage[12pt,letterpaper,top=1in,bottom=1in,left=1in,right=1in]{geometry}
+ \\usepackage{mathrsfs}
+ \\usepackage{array}
+ \\usepackage[caption=false,font=footnotesize]{subfig}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage[utf8]{inputenc}
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+             '("article-no-defaults"                          ;class-name
+               "\\documentclass{article}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+#+end_src
+
+***** [[http://authors.iop.org/atom/help.nsf/0/B042B0AF79C815B88025702000409514?OpenDocument][IOP]]
+- use [12pt] normal article and [10pt] for two column as argument to
+  document class
+
+- if using biber backend, need to make \addbibresource{ref.bib}
+
+****** pmb
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("pmb"                 ;class name
+               "\\documentclass{iopart}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{graphicx}
+ \\usepackage{caption}
+ \\usepackage{subcaption}
+ \\usepackage{hyperref}
+ \\usepackage[dcu,jphysicsB]{harvard}
+ \\usepackage{mathrsfs}
+ \\usepackage{array}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage[utf8]{inputenc}
+ \\pdfminorversion=4
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+****** pmb-draft
+- Easier to follow references if they are hyperlinked, so this uses
+  the biblatex numeric citations
+
+- Just change the ending to \printbibliography
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("pmb-draft"                 ;class name
+               "\\documentclass{iopart}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{graphicx}
+ \\usepackage{caption}
+ \\usepackage{subcaption}
+ \\usepackage{hyperref}
+ \\usepackage[dcu,jphysicsB]{harvard}
+ \\usepackage{mathrsfs}
+ \\usepackage{array}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage[utf8]{inputenc}
+ \\pdfminorversion=4
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+***** [[http://www.michaelshell.org/tex/ieeetran/][IEEEtran]]
+****** conf
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("ieeetran-conf"                 ;class name
+               "\\documentclass[conference]{IEEEtran}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage[cmex10]{amsmath}
+ \\interdisplaylinepenalty=2500
+ \\usepackage{array}
+ \\usepackage{url}
+ \\hyphenation{op-tical net-works semi-conduc-tor}
+ \\usepackage{graphicx}
+ \\usepackage{mathrsfs}
+ \\usepackage[caption=false,font=footnotesize]{subfig}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage{svg}
+ \\usepackage[utf8]{inputenc}
+ \\IEEEoverridecommandlockouts
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+             '("ieeetran-conf-a4"                 ;class name
+               "\\documentclass[conference, a4paper]{IEEEtran}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage[cmex10]{amsmath}
+ \\interdisplaylinepenalty=2500
+ \\usepackage{array}
+ \\usepackage{url}
+ \\hyphenation{op-tical net-works semi-conduc-tor}
+ \\usepackage{graphicx}
+ \\usepackage{mathrsfs}
+ \\usepackage[caption=false,font=footnotesize]{subfig}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage{svg}
+ \\usepackage[utf8]{inputenc}
+ \\IEEEoverridecommandlockouts
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+****** draft
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("ieeetran-draft"                 ;class name
+               "\\documentclass[draftcls]{IEEEtran}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage[cmex10]{amsmath}
+ \\interdisplaylinepenalty=2500
+ \\usepackage{array}
+ \\usepackage{url}
+ \\hyphenation{op-tical net-works semi-conduc-tor}
+ \\usepackage{graphicx}
+ \\usepackage{mathrsfs}
+ \\usepackage[caption=false,font=footnotesize]{subfig}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage{svg}
+ \\usepackage[utf8]{inputenc}
+ \\IEEEoverridecommandlockouts
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+#+END_SRC
+
+****** journal
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("ieeetran-journal"                 ;class name
+               "\\documentclass[journal]{IEEEtran}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage[cmex10]{amsmath}
+ \\interdisplaylinepenalty=2500
+ \\usepackage{array}
+ \\usepackage{url}
+ \\hyphenation{op-tical net-works semi-conduc-tor}
+ \\usepackage{graphicx}
+ \\usepackage{mathrsfs}
+ \\usepackage[caption=false,font=footnotesize]{subfig}
+ \\usepackage{booktabs}
+ \\usepackage{multirow}
+ \\usepackage{longtable}
+ \\usepackage{rotating}
+ \\usepackage{svg}
+ \\IEEEoverridecommandlockouts
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+***** REVTeX
+****** AIP style
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("revtex-aip"                 ;class name
+               "\\documentclass[aip,jmp,reprint]{revtex4-1}
+ \\def\\thesubsection{\\Roman{section}.\\Alph{subsection}}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{amsmath}
+ \\usepackage{bm}
+ \\usepackage{dcolumn}
+ \\usepackage{graphicx}
+ \\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+ \\usepackage[utf8]{inputenc}
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+             '("revtex-aip-draft"                 ;class name
+               "\\documentclass[aip,jmp,linenumbers,preprint]{revtex4-1}
+ \\def\\thesubsection{\\Roman{section}.\\Alph{subsection}}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{amsmath}
+ \\usepackage{bm}
+ \\usepackage{dcolumn}
+ \\usepackage{graphicx}
+ \\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+ \\usepackage[utf8]{inputenc}
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+****** APS style
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("revtex-aps"                 ;class name
+               "\\documentclass{revtex4-1}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{amsmath}
+ \\usepackage{graphicx}
+ \\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+ \\usepackage[utf8]{inputenc}
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+***** SPIE
+ Define the SPIE proceedings class
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("spie"                   ;class-name
+               "\\documentclass{spie}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{amsmath}
+ \\usepackage{graphicx}
+ \\usepackage[utf8]{inputenc}
+ [EXTRA]" ;;header-string
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+***** resume
+The [[https://github.com/punchagan/resume][style]] class for resume. However, I as I am currently maintaining
+this in the folder with the style sheet, I am going to turn this off
+for the time being.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'org-latex-classes
+             '("resume"                 ;class name
+               "\\documentclass{resume}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ [EXTRA]" ;;header-string
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+#+END_SRC
+
+***** thesis
+- [[https://github.com/zuwiki/ucetd-latex][uchicago]] latex style
+- export is based on the [[http://orgmode.org/worg/org-contrib/babel/examples/article-class.html][article-class]]
+- [[http://bastibe.de/2014-11-19-writing-a-thesis-in-org-mode.html][master thesis]] in orgmode
+- [[http://www.macs.hw.ac.uk/~rs46/phd-thesis.html][phd thesis]] in orgmode
+- another [[http://valodim.stratum0.net/madoc.org][master's thesis]] in orgmode
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("thesis"                 ;class name
+               "\\documentclass{ucetd}
+ [NO-DEFAULT-PACKAGES]
+ [PACKAGES]
+ \\usepackage{epsfig,amsfonts}
+ \\usepackage{natbib}
+ \\usepackage{amsmath}
+ \\usepackage{amssymb}
+ \\usepackage{amsthm}
+ \\usepackage{array}
+ \\usepackage{booktabs}
+ \\usepackage{caption}
+ \\usepackage{graphicx, subcaption}
+ \\usepackage[hidelinks]{hyperref}
+ \\usepackage[utf8]{inputenc}
+ \\usepackage{longtable}
+ \\usepackage{multirow}
+ \\usepackage{mathrsfs}
+ \\usepackage{rotating}
+ [EXTRA]" ;;header-string
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*a{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+**** latexmk
+I've had issues with getting BiBTeX to work correctly with the LaTeX
+exporter for PDF exporting. By changing the command to `latexmk`
+references appear in the PDF output like they should. Source:
+http://tex.stackexchange.com/a/161619.
+
+- [[http://orgmode.org/manual/LaTeX-specific-attributes.html][specific attributes]] manual entry
+
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (setq org-latex-pdf-process (list "latexmk -pdf %f"))
+ #+END_SRC
+
+**** [[http://pandoc.org/][Pandoc]]
+[[http://pandoc.org/][Pandoc]] converts between a huge number of different file formats.
+However, wgreenhouse said he found it better for just direct
+conversion to simpler formats such as docx. The customized layout
+approach I am using would be difficult to get working with this setup.
+- [[https://github.com/kawabata/ox-pandoc][github]]
+- [[https://github.com/kawabata/ox-pandoc][ox-pandoc]]
+#+begin_src emacs-lisp
+(use-package ox-pandoc
+  :no-require t
+  :defer 10
+  :ensure t)
+#+end_src
+***** arch
+#+BEGIN_SRC sh :tangle no
+pacman -S pandoc
+#+END_SRC
+*** [[http://orgmode.org/worg/org-tutorials/org-jekyll.html][jekyll]]
+ - possible to configure my org export for jekyll from html to maintain
+   my site
+ - had to modify the publish-function based on this [[https://stackoverflow.com/questions/21716725/problems-publishing-org-files][feeback]]
+ - very nice [[http://www.gorgnegre.com/linux/using-emacs-orgmode-to-blog-with-jekyll.html][example]] and explanation of org-mode with org-jekyll
+ - [[http://juanreyero.com/open/org-jekyll/][discussion]] on org-jekyll though guy doesn't use it
+
+ #+BEGIN_SRC emacs-lisp
+   (setq org-publish-project-alist
+         '(
+
+     ("org-andrewmichaeldavis"
+             ;; Path to your org files.
+             :base-directory "~/cloud/personal/website/andrewmichaeldavis.com/org/"
+             :base-extension "org"
+
+             ;; Path to your Jekyll project.
+             :publishing-directory "~/cloud/personal/website/andrewmichaeldavis.com/jekyll/"
+             :recursive t
+             :publishing-function org-html-publish-to-html
+             :headline-levels 4
+             :html-extension "html"
+             :body-only t ;; Only export section between <body> </body>
+             :table-of-contents nil
+             :html-mathjax "path \"https://cdn.mathjax.org/mathjax/latest/MathJax.js\""
+             )
+
+
+       ("org-static-amd"
+             :base-directory "~/cloud/personal/website/andrewmichaeldavis.com/org/"
+             :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+             :publishing-directory "~/cloud/personal/website/andrewmichaeldavis.com/jekyll"
+             :recursive t
+             :table-of-contents nil
+             :publishing-function org-publish-attachment
+             :html-mathjax "path \"https://cdn.mathjax.org/mathjax/latest/MathJax.js\""
+             )
+
+       ("amd" :components ("org-andrewmichaeldavis" "org-static-amd"))
+
+   ))
+ #+END_SRC
+
+**** [[https://libraries.io/emacs/jekyll-modes][jekyll-modes]]
+ - provides editing support for jekyll tags/layouts
+ - [[https://libraries.io/github/purcell][purcell's]] website (author)
+
+**** [[https://github.com/cinsk/jekyll-org/][jekyll-org]]                              :jekyll:website:backburner:
+ - [[https://cinsk.github.io/jekyll-org/articles/jekyll-org.html][example]] using twitter bootstrap
+
+**** org2jekyll
+ - another package I already had installed
+ - [ ] figure out workflow I want
+
+**** [[https://github.com/bmaland/hyde][hyde]]
+ - integration for handling formatting stuff
+
+ #+BEGIN_SRC emacs-lisp
+   ;; (setq org-publish-project-alist
+   ;;       '(
+   ;;         ("blog-posts"
+   ;;          :base-directory "~/blog/_org/posts/"
+   ;;          :base-extension "org"
+   ;;          :publishing-directory "~/blog/_posts"
+   ;;          :inline-images t
+   ;;          :table-of-contents nil
+   ;;          :drawers nil
+   ;;          :todo-keywords nil ; Skip todo keywords
+   ;;          :exclude "draft*" ; TODO fix
+   ;;          :section-numbers nil
+   ;;          :auto-preamble nil
+   ;;          :auto-postamble nil
+   ;;          )
+   ;;         ("blog-pages" ;; This section is optional.
+   ;;          :base-directory "~/blog/_org/pages/"
+   ;;          :base-extension "org"
+   ;;          :publishing-directory "~/blog/pages"
+   ;;          :inline-images t
+   ;;          :table-of-contents nil
+   ;;          :drawers nil
+   ;;          :todo-keywords nil ; Skip todo keywords
+   ;;          :section-numbers nil
+   ;;          :auto-preamble nil
+   ;;          :auto-postamble nil
+   ;;          ;; :completion-function
+   ;;          )
+   ;;         ("blog" :components ("blog-posts" "blog-pages"))))
+ #+END_SRC
+
+***** examples
+ - [[http://cse3521.artifice.cc/][AI]] professor's site using setup ([[https://github.com/joshuaeckroth/cse3521-website][code]])
+
+***** [[https://github.com/nibrahim/Hyde][hyde]]
+ - [[https://github.com/nibrahim/nibrahim.net.in/blob/master/_posts/2010-11-11-hyde_%253A_an_emacs_mode_for_jekyll_blogs.markdown][tutorial]]
+ - this looks like what the melpa version is for
+ - mainly looks like an interface
+ - [ ] follow up
+
+***** [[https://github.com/punchagan/org-hyde][org-hyde]]
+ - port of [[http://juanreyero.com/open/org-jekyll/][org-jekyll]]
+ - [[https://punchagan.muse-amuse.in/posts/wp-to-org-mode-hyde-disqus.html][guide]]
+*** Microsoft
+Some compatibility stuff
+#+begin_src emacs-lisp
+;; support for links to microsoft docx,pptx,xlsx files
+;; standard org-mode opens these as zip-files
+;;  http://orgmode.org/manual/Adding-hyperlink-types.html
+(defun org-msx-open (path)
+  "Visit the msx file on PATH.
+
+   uses the dos command:
+   start  empty title path
+   "
+  (shell-command
+   (concat "start \"title\" " (shell-quote-argument path)) t))
+
+(org-link-set-parameters
+ "msx"
+ 'org-msx-open)
+#+end_src
+*** org-bibtex
+ Uses orgmode headers and properties to navigate the references, going
+ to go with this for now as it is built in functionality to orgmode
+ rather than the org-ref extension which isn't part of MELPA yet
+
+ - [[http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/][Screencast]]
+ - Got this setting working, but I prefer Justin's Org-ref
+
+ #+begin_src emacs-lisp
+   ;; ;; manage citations
+   ;; (require 'org-bibtex)
+
+   ;; ;; Latex settings
+   ;; ;; Get reftex in org-mode
+   ;; (setq-default TeX-master t)
+
+   ;; (defun org-mode-reftex-setup ()
+   ;;   (load-library "reftex")
+   ;;   (and (buffer-file-name)
+   ;;        (file-exists-p (buffer-file-name))
+   ;;        (global-auto-revert-mode t)
+   ;;        (reftex-parse-all)))
+
+   ;; ;; reftex keybinding
+   ;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+   ;; (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search)
+
+   ;; ;; add hooks to org-mode
+   ;; (add-hook 'org-mode-hook 'org-mode-reftex-setup)
+   ;; (add-hook 'org-mode-hook 'turn-on-reftex)
+
+   ;; ;; master bibliography
+   ;; (setq org-bibtex-file '("~/cloud/bibliography/ref.bib"))
+
+ #+end_src
+
+*** [[https://github.com/jkitchin/org-ref/blob/master/org-ref.org][org-ref]]
+Make sure you have dash, helm, helm-bibtex, ebib, s, f, hydra and
+key-chord in your load-path
+
+- [ ] Use [[https://github.com/bixuanzju/emacs.d/blob/master/emacs-init.org][bixuanzju]] idea of keeping stuff modular here. Probably need
+  to do this for org-mode and helm as well.
+
+#+begin_src emacs-lisp
+(use-package org-ref
+  :ensure t
+  :config
+  ;; (setq reftex-default-bibliography '("~/cloud/bibliography/ref.bib"))
+
+  ;; TODO change this keybinding
+  ;; :ensure hydra
+  ;; (setq org-ref-bibtex-hydra-key-binding "\C-c h")
+
+  ;; see org-ref for use of these variables
+  (setq org-ref-bibliography-notes "~/cloud/bibliography/notes.org"
+        org-ref-default-bibliography '("~/cloud/bibliography/ref.bib")
+        org-ref-pdf-directory "~/cloud/zotero")
+
+  (require 'org-ref)
+  ;; ;; optional but very useful libraries in org-ref
+  (require 'doi-utils)
+  (require 'org-ref-pdf)
+  (require 'org-ref-url-utils)
+  (require 'org-ref-bibtex)
+  (require 'org-ref-latex)
+  (require 'org-ref-arxiv)
+  (require 'org-ref-pubmed)
+  (require 'org-ref-isbn)
+  (require 'org-ref-wos)
+  (require 'org-ref-scopus)
+  (require 'x2bib)
+  (require 'nist-webbook)
+  (require 'org-ref-scifinder)
+  (require 'org-ref-worldcat)
+  )
+#+end_src
+
+**** DOI-utils
+ Another useful program from jmax. Currently can't get org-ref to work,
+ so I am going to hold off on implementing this until I have a better
+ understanding of his program.
+
+ Could just use the org-load command like I used for the org-ref since
+ this didn't introduce the massive amount of compilation that appears
+ to be freezing my software.
+
+*** Org-Show
+ For doing presentations from emacs.
+
+ - Currently doing presentations from pdf's exported to beamer.
+
+*** capture templates
+#+BEGIN_SRC emacs-lisp
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/cloud/org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("r" "respond" entry (file "~/cloud/org/refile.org")
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+              ("n" "note" entry (file "~/cloud/org/refile.org")
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree "~/cloud/org/journal.org")
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file "~/cloud/org/refile.org")
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+              ("m" "Meeting" entry (file "~/cloud/org/refile.org")
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+              ;;               ("c" "Contacts" entry (file "~/cloud/org/contacts.org")
+              ;;                "* %(org-contacts-template-name)
+              ;; :PROPERTIES:
+              ;; :EMAIL: %(org-contacts-template-email)
+              ;; :END:")
+              ("p" "Phone call" entry (file "~/cloud/org/refile.org")
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+              ("h" "Habit" entry (file "~/cloud/org/refile.org")
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+#+END_SRC
+*** refile
+I may need to modify this to use helm.
+
+#+BEGIN_SRC emacs-lisp
+; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+(setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
+
+; Use full outline paths for refile targets - we file directly with IDO
+(setq org-refile-use-outline-path t)
+
+; Targets complete directly with IDO
+(setq org-outline-path-complete-in-steps nil)
+
+; Allow refile to create parent tasks with confirmation
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+;; Use IDO for both buffer and file completion and ido-everywhere to t
+;; (setq org-completion-use-ido t)
+;; (setq ido-everywhere t)
+;; (setq ido-max-directory-size 100000)
+;; (ido-mode (quote both))
+
+;; ;; Use the current window when visiting files and buffers with ido
+;; (setq ido-default-file-method 'selected-window)
+;; (setq ido-default-buffer-method 'selected-window)
+
+;; Use the current window for indirect buffer display
+(setq org-indirect-buffer-display 'current-window)
+
+;;;; Refile settings
+; Exclude DONE state tasks from refile targets
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
+#+END_SRC
+
+*** tags
+- [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][GTD Workflow]]
+- [[http://sachachua.com/blog/2008/01/tagging-in-org-plus-bonus-code-for-timeclocks-and-tags/][Sacha Chua]]
+
+The default value is -77, which is weird for smaller width windows.
+I'd rather have the tags align horizontally with the header. 45 is a
+good column number to do that.
+
+#+begin_src emacs-lisp
+(setq org-tags-column 45)
+
+;; (setq org-tag-alist '(("@work" . ?w)
+;;                       ("@home" . ?h)
+;;                       ("laptop" . ?l)
+;;                       ("meeting" . ?m)
+;;                       ("noexport" . ?n)
+;;                       ))
+
+; Tags with fast selection keys
+(setq org-tag-alist (quote ((:startgroup)
+                            ("@errand" . ?e)
+                            ("@home" . ?H)
+                            ("@office" . ?o)
+                            ("@vacation" . ?v)
+                            (:endgroup)
+                            ("agenda" . ?a)
+                            ("backburner" . ?b)
+                            ("crypt" . ?E)
+                            ("noexport" . ?N)
+                            ("personal" . ?p)
+                            ("reading" . ?r)
+                            ("writing" . ?w)
+                            ("CANCELLED" . ?c)
+                            ("FLAGGED" . ??)
+                            ("HOLD" . ?h)
+                            ("NOTE" . ?n)
+                            ("ORG" . ?O)
+                            ("WAITING" . ?W)
+                            )))
+
+;; Allow setting single tags without the menu
+;; (setq org-fast-tag-selection-single-key (quote expert))
+
+;; For tag searches ignore tasks with scheduled and deadline dates
+(setq org-agenda-tags-todo-honor-ignore-options t)
+#+end_src
+
+#+RESULTS:
+: t
+
+*** [[http://doc.norang.ca/org-mode.html][Bernt Hansen's gtd]]
+Bernt Hansen has a pretty good setup for clocking in and tracking tasks.
+
+- [ ] Got to 18.15 in his guide. Definitely need to look at the last
+  part where he has automatic hourly commits to git... This is what I
+  was already looking for.
+**** org-settings
+#+BEGIN_SRC emacs-lisp
+;; fast todo selection based on keyword
+(setq org-use-fast-todo-selection t)
+
+;; this avoid the normal processing when leaving a TODO state
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+ #+END_SRC
+
+This cleanup function was causing issues that were discussed [[https://stackoverflow.com/questions/21767471/org-capture-and-time-clocking-misbehaving][here]]
+
+#+BEGIN_SRC emacs-lisp
+(defun bh/remove-empty-drawer-on-clock-out ()
+   (interactive)
+   (save-excursion
+     (beginning-of-line 0)
+     (org-remove-empty-drawer-at (point))))
+
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+#+END_SRC
+**** keywords
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+              ("MEETING" :foreground "forest green" :weight bold)
+              ("PHONE" :foreground "forest green" :weight bold))))
+#+END_SRC
+**** state triggers
+The triggers break down to the following rules:
+
+- Moving a task to CANCELLED adds a CANCELLED tag
+- Moving a task to WAITING adds a WAITING tag
+- Moving a task to HOLD adds WAITING and HOLD tags
+- Moving a task to a done state removes WAITING and HOLD tags
+- Moving a task to TODO removes WAITING, CANCELLED, and HOLD tags
+- Moving a task to NEXT removes WAITING, CANCELLED, and HOLD tags
+- Moving a task to DONE removes WAITING, CANCELLED, and HOLD tags
+
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+#+END_SRC
+**** agenda view
+#+BEGIN_SRC emacs-lisp
+;; Do not dim blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
+
+;; Compact the block agenda view
+(setq org-agenda-compact-blocks t)
+
+;; to keep the agenda view fast
+(setq org-agenda-span 'day)
+
+;; any TODO with no NEXT action is stuck
+(setq org-stuck-projects (quote ("" nil nil "")))
+
+;; Custom agenda command definitions
+(setq org-agenda-custom-commands
+      (quote (("N" "Notes" tags "NOTE"
+               ((org-agenda-overriding-header "Notes")
+                (org-tags-match-list-sublevels t)))
+              ("h" "Habits" tags-todo "STYLE=\"habit\""
+               ((org-agenda-overriding-header "Habits")
+                (org-agenda-sorting-strategy
+                 '(todo-state-down effort-up category-keep))))
+              (" " "Agenda"
+               ((agenda "" nil)
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "Tasks to Refile")
+                       (org-tags-match-list-sublevels nil)))
+                (tags-todo "-CANCELLED/!"
+                           ((org-agenda-overriding-header "Stuck Projects")
+                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep))))
+                (tags-todo "-HOLD-CANCELLED/!"
+                           ((org-agenda-overriding-header "Projects")
+                            (org-agenda-skip-function 'bh/skip-non-projects)
+                            (org-tags-match-list-sublevels 'indented)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Project Subtasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-non-project-tasks)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Standalone Tasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-project-tasks)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                           ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-non-tasks)
+                            (org-tags-match-list-sublevels nil)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
+                ;; (tags "-REFILE/"
+                ;;       ((org-agenda-overriding-header "Tasks to Archive")
+                ;;        (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                ;;        (org-tags-match-list-sublevels nil)))
+                )
+               nil))))
+
+;; filter context-based tasks
+(defun bh/org-auto-exclude-function (tag)
+  "Automatic task exclusion in the agenda with / RET"
+  (and (cond
+        ((string= tag "hold")
+         t)
+        ((string= tag "backburner")
+         t))
+       (concat "-" tag)))
+
+(setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
+#+END_SRC
+**** functions
+Here is the functions for the workflow
+***** clocking
+#+BEGIN_SRC emacs-lisp
+;; Change tasks to NEXT when clocking in
+(setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+
+(setq bh/keep-clock-running nil)
+
+(defun bh/clock-in-to-next (kw)
+  "Switch a task from TODO to NEXT when clocking in.
+Skips capture tasks, projects, and subprojects.
+Switch projects and subprojects from NEXT back to TODO"
+  (when (not (and (boundp 'org-capture-mode) org-capture-mode))
+    (cond
+     ((and (member (org-get-todo-state) (list "TODO"))
+           (bh/is-task-p))
+      "NEXT")
+     ((and (member (org-get-todo-state) (list "NEXT"))
+           (bh/is-project-p))
+      "TODO"))))
+
+(defun bh/find-project-task ()
+  "Move point to the parent (project) task if any"
+  (save-restriction
+    (widen)
+    (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
+      (while (org-up-heading-safe)
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq parent-task (point))))
+      (goto-char parent-task)
+      parent-task)))
+
+(defun bh/punch-in (arg)
+  "Start continuous clocking and set the default task to the
+selected task.  If no task is selected set the Organization task
+as the default task."
+  (interactive "p")
+  (setq bh/keep-clock-running t)
+  (if (equal major-mode 'org-agenda-mode)
+      ;;
+      ;; We're in the agenda
+      ;;
+      (let* ((marker (org-get-at-bol 'org-hd-marker))
+             (tags (org-with-point-at marker (org-get-tags-at))))
+        (if (and (eq arg 4) tags)
+            (org-agenda-clock-in '(16))
+          (bh/clock-in-organization-task-as-default)))
+    ;;
+    ;; We are not in the agenda
+    ;;
+    (save-restriction
+      (widen)
+      ; Find the tags on the current task
+      (if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+          (org-clock-in '(16))
+        (bh/clock-in-organization-task-as-default)))))
+
+(defun bh/punch-out ()
+  (interactive)
+  (setq bh/keep-clock-running nil)
+  (when (org-clock-is-active)
+    (org-clock-out))
+  (org-agenda-remove-restriction-lock))
+
+(defun bh/clock-in-default-task ()
+  (save-excursion
+    (org-with-point-at org-clock-default-task
+      (org-clock-in))))
+
+(defun bh/clock-in-parent-task ()
+  "Move point to the parent (project) task if any and clock in"
+  (let ((parent-task))
+    (save-excursion
+      (save-restriction
+        (widen)
+        (while (and (not parent-task) (org-up-heading-safe))
+          (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+            (setq parent-task (point))))
+        (if parent-task
+            (org-with-point-at parent-task
+              (org-clock-in))
+          (when bh/keep-clock-running
+            (bh/clock-in-default-task)))))))
+
+(defvar bh/organization-task-id "15f4cc8b-d018-45e2-81ef-8c900b260029")
+
+(defun bh/clock-in-organization-task-as-default ()
+  (interactive)
+  (org-with-point-at (org-id-find bh/organization-task-id 'marker)
+    (org-clock-in '(16))))
+
+(defun bh/clock-out-maybe ()
+  (when (and bh/keep-clock-running
+             (not org-clock-clocking-in)
+             (marker-buffer org-clock-default-task)
+             (not org-clock-resolving-clocks-due-to-idleness))
+    (bh/clock-in-parent-task)))
+
+(add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+
+(require 'org-id)
+(defun bh/clock-in-task-by-id (id)
+  "Clock in a task by id"
+  (org-with-point-at (org-id-find id 'marker)
+    (org-clock-in nil)))
+
+(defun bh/clock-in-last-task (arg)
+  "Clock in the interrupted task if there is one
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+  (interactive "p")
+  (let ((clock-in-to-task
+         (cond
+          ((eq arg 4) org-clock-default-task)
+          ((and (org-clock-is-active)
+                (equal org-clock-default-task (cadr org-clock-history)))
+           (caddr org-clock-history))
+          ((org-clock-is-active) (cadr org-clock-history))
+          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+          (t (car org-clock-history)))))
+    (widen)
+    (org-with-point-at clock-in-to-task
+      (org-clock-in nil))))
+
+(defun bh/org-auto-exclude-function (tag)
+  "Automatic task exclusion in the agenda with / RET"
+  (and (cond
+        ((string= tag "hold")
+         t)
+        ((string= tag "backburner")
+         t))
+       (concat "-" tag)))
+
+(setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
+ #+END_SRC
+***** projects
+#+BEGIN_SRC emacs-lisp
+(defun bh/is-project-p ()
+  "Any task with a todo keyword subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task has-subtask))))
+
+(defun bh/is-project-subtree-p ()
+  "Any task with a todo keyword that is in a project subtree.
+Callers of this function already widen the buffer view."
+  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                              (point))))
+    (save-excursion
+      (bh/find-project-task)
+      (if (equal (point) task)
+          nil
+        t))))
+
+(defun bh/is-task-p ()
+  "Any task with a todo keyword and no subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task (not has-subtask)))))
+
+(defun bh/is-subproject-p ()
+  "Any task which is a subtask of another project"
+  (let ((is-subproject)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject) (org-up-heading-safe))
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq is-subproject t))))
+    (and is-a-task is-subproject)))
+
+(defun bh/list-sublevels-for-projects-indented ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels 'indented)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defun bh/list-sublevels-for-projects ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels t)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defvar bh/hide-scheduled-and-waiting-next-tasks t)
+
+(defun bh/toggle-next-task-display ()
+  (interactive)
+  (setq bh/hide-scheduled-and-waiting-next-tasks (not bh/hide-scheduled-and-waiting-next-tasks))
+  (when  (equal major-mode 'org-agenda-mode)
+    (org-agenda-redo))
+  (message "%s WAITING and SCHEDULED NEXT Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+
+(defun bh/skip-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (bh/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                nil
+              next-headline)) ; a stuck project, has subtasks but no next task
+        nil))))
+
+(defun bh/skip-non-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  ;; (bh/list-sublevels-for-projects-indented)
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (bh/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                next-headline
+              nil)) ; a stuck project, has subtasks but no next task
+        next-headline))))
+
+(defun bh/skip-non-projects ()
+  "Skip trees that are not projects"
+  ;; (bh/list-sublevels-for-projects-indented)
+  (if (save-excursion (bh/skip-non-stuck-projects))
+      (save-restriction
+        (widen)
+        (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+          (cond
+           ((bh/is-project-p)
+            nil)
+           ((and (bh/is-project-subtree-p) (not (bh/is-task-p)))
+            nil)
+           (t
+            subtree-end))))
+    (save-excursion (org-end-of-subtree t))))
+
+(defun bh/skip-non-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-task-p)
+        nil)
+       (t
+        next-headline)))))
+
+(defun bh/skip-project-trees-and-habits ()
+  "Skip trees that are projects"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits-and-single-tasks ()
+  "Skip trees that are projects, tasks that are habits, single non-project tasks"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((org-is-habit-p)
+        next-headline)
+       ((and bh/hide-scheduled-and-waiting-next-tasks
+             (member "WAITING" (org-get-tags-at)))
+        next-headline)
+       ((bh/is-project-p)
+        next-headline)
+       ((and (bh/is-task-p) (not (bh/is-project-subtree-p)))
+        next-headline)
+       (t
+        nil)))))
+
+(defun bh/skip-project-tasks-maybe ()
+  "Show tasks related to the current restriction.
+When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
+When not restricted, skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max))))
+           (limit-to-project (marker-buffer org-agenda-restrict-begin)))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (not limit-to-project)
+             (bh/is-project-subtree-p))
+        subtree-end)
+       ((and limit-to-project
+             (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-project-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       ((bh/is-project-subtree-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-project-tasks ()
+  "Show project tasks.
+Skip project and sub-project tasks, habits, and loose non-project tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       ((not (bh/is-project-subtree-p))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits ()
+  "Skip trees that are projects and tasks that are habits"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-subprojects ()
+  "Skip trees that are not projects"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (bh/is-subproject-p)
+        nil
+      next-headline)))
+#+END_SRC
+***** time stamps
+I am going to keep the time stamps off by default.
+
+#+BEGIN_SRC emacs-lisp
+(defvar bh/insert-inactive-timestamp nil)
+
+(defun bh/toggle-insert-inactive-timestamp ()
+  (interactive)
+  (setq bh/insert-inactive-timestamp (not bh/insert-inactive-timestamp))
+  (message "Heading timestamps are %s" (if bh/insert-inactive-timestamp "ON" "OFF")))
+
+(defun bh/insert-inactive-timestamp ()
+  (interactive)
+  (org-insert-time-stamp nil t t nil nil nil))
+
+(defun bh/insert-heading-inactive-timestamp ()
+  (save-excursion
+    (when bh/insert-inactive-timestamp
+      (org-return)
+      (org-cycle)
+      (bh/insert-inactive-timestamp))))
+
+(add-hook 'org-insert-heading-hook 'bh/insert-heading-inactive-timestamp 'append)
+#+END_SRC
+**** keybindings
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f10>") 'org-agenda)
+;; (global-set-key (kbd "<f8>") 'bh/org-todo)
+;; (global-set-key (kbd "<S-f5>") 'bh/widen)
+;; (global-set-key (kbd "<f7>") 'bh/set-truncate-lines)
+;; (global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
+;; (global-set-key (kbd "<f9> <f9>") 'bh/show-org-agenda)
+(global-set-key (kbd "<f9> b") 'bbdb)
+(global-set-key (kbd "<f9> c") 'mycalendar)
+;; (global-set-key (kbd "<f9> f") 'boxquote-insert-file)
+;; (global-set-key (kbd "<f9> g") 'gnus)
+;; (global-set-key (kbd "<f9> h") 'bh/hide-other)
+(global-set-key (kbd "<f9> n") 'bh/toggle-next-task-display)
+
+(global-set-key (kbd "<f9> i") 'bh/punch-in)
+(global-set-key (kbd "<f9> o") 'bh/punch-out)
+
+;; (global-set-key (kbd "<f9> o") 'bh/make-org-scratch)
+
+;; (global-set-key (kbd "<f9> r") 'boxquote-region)
+;; (global-set-key (kbd "<f9> s") 'bh/switch-to-scratch)
+
+(global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
+(global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
+
+(global-set-key (kbd "<f9> v") 'visible-mode)
+(global-set-key (kbd "<f9> l") 'org-toggle-link-display)
+(global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
+;; (global-set-key (kbd "C-<f9>") 'previous-buffer)
+;; (global-set-key (kbd "M-<f9>") 'org-toggle-inline-images)
+;; (global-set-key (kbd "C-x n r") 'narrow-to-region)
+;; (global-set-key (kbd "C-<f10>") 'next-buffer)
+
+(global-set-key (kbd "<f9> j") 'org-clock-goto)
+(global-set-key (kbd "C-<f9>") 'org-clock-in)
+;; (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
+;; (global-set-key (kbd "C-c c") 'org-capture)
+#+END_SRC
+**** estimate
+#+BEGIN_SRC emacs-lisp
+; global Effort estimate values
+; global STYLE property values for completion
+(setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                    ("STYLE_ALL" . "habit"))))
+#+END_SRC
+**** reports
+To generate the report I pull up the agenda for the appropriate time
+frame (today, yesterday, this week, or last week) and hit the key
+sequence l R to add the log report (without clocking data lines) and
+the agenda clock report at the end.
+
+Then it's simply a matter of exporting the resulting agenda in some
+useful format to provide to other people. C-x C-w /tmp/agenda.html RET
+exports to HTML and C-x C-w /tmp/agenda.txt RET exports to plain text.
+Other formats are available but I use these two the most.
+
+Combining this export with tag filters and C-u R can limit the report
+to exactly the tags that people are interested in.
+
+#+BEGIN_SRC emacs-lisp
+;; Agenda log mode items to display (closed and state changes by default)
+(setq org-agenda-log-mode-items (quote (closed state)))
+#+END_SRC
+** [[https://github.com/lolownia/org-pomodoro][org-pomodoro]]
+- simple implementation of [[https://cirillocompany.de/pages/pomodoro-technique][pomodoro]] with org
+- I am going to modify this so that I can combine with bh/clock-in
+- I would also like the break to log to a break location rather than
+  clocking out
+#+BEGIN_SRC emacs-lisp
+(use-package org-pomodoro
+  :ensure t
+  :bind ("<f9> p" . org-pomodoro)
+  :config
+  ;; aplay/afplay is default for mac use sox for *nix
+  (when (eq system-type 'gnu/linux)
+    (setq org-pomodoro-audio-player "play")
+    )
+
+  ;; org-pomodoro mode hooks
+  (add-hook 'org-pomodoro-finished-hook
+            (lambda ()
+              (alert "Pomodoro completed!: Time for a break.")
+              (bh/clock-in-task-by-id "FCD1E8AE-01B1-4039-B44D-CE53594546C8")
+              ))
+
+  (add-hook 'org-pomodoro-break-finished-hook
+            (lambda ()
+              (alert "Pomodoro Short Break Finished: Ready for Another?")))
+
+  (add-hook 'org-pomodoro-long-break-finished-hook
+            (lambda ()
+              (alert "Pomodoro Long Break Finished: Ready for Another?")))
+
+  (add-hook 'org-pomodoro-killed-hook
+            (lambda ()
+              (alert "Pomodoro Killed: One does not simply kill a pomodoro!")))
+
+  ;; (defun amd/pomodoro (arg)
+  ;;   "Start org-pomodoro and punch in"
+  ;;   (interactive)
+  ;;   (lambda (arg) bh/punch-in)
+  ;;   (org-pomodoro))
+  )
+#+END_SRC
