@@ -22,3 +22,6 @@ The following resources give great examples of [[https://orgmode.org/][org mode]
 - [[http://members.optusnet.com.au/~charles57/GTD/orgmode.html][Charles Cave's]] example of the GTD system with org-mode
 - [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][workflow]] example from Charles
 - some interesting org-mode [[http://orgmode.org/worg/org-hacks.html][hacks]]
+* videos
+- [[https://www.youtube.com/watch?v=0g9BcZvQbXU][Consistent Technical Documents Using Emacs and Org Mode]]
+- [[https://www.youtube.com/watch?v=dljNabciEGg][Literate Devops with Emacs]]
