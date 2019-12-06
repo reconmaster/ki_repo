@@ -23,5 +23,9 @@ The following resources give great examples of [[https://orgmode.org/][org mode]
 - [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][workflow]] example from Charles
 - some interesting org-mode [[http://orgmode.org/worg/org-hacks.html][hacks]]
 * videos
+- [[https://www.youtube.com/watch?v=SzA2YODtgK4][Getting Started With Org Mode]]
+- [[https://www.youtube.com/watch?v=fgizHHd7nOo][org mode is awesome]]
 - [[https://www.youtube.com/watch?v=0g9BcZvQbXU][Consistent Technical Documents Using Emacs and Org Mode]]
+- [[https://www.youtube.com/watch?v=Bvse62CR-w0][Python + Org-mode for fluent output generation of scientific research]]
+- [[https://www.youtube.com/watch?v=2t925KRBbFc][Introduction to org-ref]]
 - [[https://www.youtube.com/watch?v=dljNabciEGg][Literate Devops with Emacs]]

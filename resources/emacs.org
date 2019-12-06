@@ -102,3 +102,6 @@ Does a lot of good work with emacs.
 * communities
 - [[https://www.reddit.com/r/emacs/][/r/emacs]]
 - #emacs on irc.freenode.net
+* videos
+- [[https://www.youtube.com/watch?v=Iagbv974GlQ][Emacs Tutorial]]
+- [[https://www.youtube.com/watch?v=JWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]]
