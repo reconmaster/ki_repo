@@ -18,3 +18,8 @@ that we distill from our analytic efforts. However the results
 themselves are only part of the experiments quality. The procedures in
 obtaining these particular results will provide the foundation for
 future improvements on these findings.
+* Dissertations
+- [[https://github.com/reconmaster/thesis][reconmaster]]
+- [[http://bastibe.de/2014-11-19-writing-a-thesis-in-org-mode.html][master thesis]] in orgmode
+- [[http://www.macs.hw.ac.uk/~rs46/phd-thesis.html][phd thesis]] in orgmode
+- another [[http://valodim.stratum0.net/madoc.org][master's thesis]] in orgmode
