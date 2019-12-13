@@ -16,3 +16,21 @@ Objective: [[https://en.wikipedia.org/wiki/Data][data]]
 Data is the information feedback reality gives us in our research
 endeavors. To obtain any signal in the noise, careful collection and
 organization must be performed to aide in subsequent [[../analysis/README.org][analysis]].
+* Community
+** [[https://www.reddit.com/][reddit]]
+*** [[https://www.reddit.com/r/emacs/][/r/emacs]]
+ | date                   | users |
+ |------------------------+-------|
+ | [2019-12-13 Fri 13:15] | 35143 |
+*** [[https://www.reddit.com/r/git/][/r/git]]
+ | date                   | users |
+ |------------------------+-------|
+ | [2019-12-13 Fri 13:14] | 37213 |
+*** [[https://www.reddit.com/r/KiLife/][/r/KiLife]]
+| date                   | users |
+|------------------------+-------|
+| [2019-12-13 Fri 13:16] |     1 |
+*** [[https://www.reddit.com/r/orgmode/][/r/orgmode]]
+ | date                   | users |
+ |------------------------+-------|
+ | [2019-12-13 Fri 13:13] |  6780 |
